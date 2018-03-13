@@ -9,5 +9,6 @@ public class Controller {
     System.out.println(account.getFirstName());
     System.out.println(budget.getSpendingLimit());
     System.out.println(transaction.getCategoryOfTransaction());
-    }
+		//Test, Can I edit remotely? - Aleks
+	}
 }

@@ -10,5 +10,6 @@ public class Controller {
     System.out.println(budget.getSpendingLimit());
     System.out.println(transaction.getCategoryOfTransaction());
 		//Test, Can I edit remotely? - Aleks
+		//Second Test, Will this work?
 	}
 }

@@ -18,7 +18,7 @@ public class SQLiteConnection {
         try
         {
             Class.forName("org.sqlite.JDBC");
-            con = DriverManager.getConnection("JDBC:sqlite:src/Resources/database.db");
+            con = DriverManager.getConnection("JDBC:sqlite:src/database.db");
         } catch (ClassNotFoundException e)
         {
             System.out.println("Driver not found!");

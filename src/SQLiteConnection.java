@@ -34,8 +34,7 @@ public class SQLiteConnection {
         ResultSet rs = null;
         try
         {
-            Statement stmt = con
-                    .createStatement();
+            Statement stmt = con.createStatement();
             rs = stmt.executeQuery(sql);
         }
         catch (SQLException se)

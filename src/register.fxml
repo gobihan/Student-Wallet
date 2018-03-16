@@ -24,9 +24,9 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <TextField fx:id="username" layoutX="240.0" layoutY="188.0" />
-        <Button fx:id="login" layoutX="329.0" layoutY="336.0" mnemonicParsing="false" text="Register" />
-        <PasswordField fx:id="password" layoutX="240.0" layoutY="227.0" />
+        <TextField fx:id="username2" layoutX="240.0" layoutY="188.0" />
+        <Button fx:id="register" layoutX="329.0" layoutY="336.0" mnemonicParsing="false" onAction="#register" text="Register" />
+        <PasswordField fx:id="password2" layoutX="240.0" layoutY="227.0" />
       <Label layoutX="150.0" layoutY="119.0" text="First Name:">
          <font>
             <Font size="14.0" />
@@ -37,19 +37,19 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="username1" layoutX="240.0" layoutY="151.0" />
-      <TextField fx:id="username11" layoutX="240.0" layoutY="116.0" />
+      <TextField fx:id="secondname" layoutX="240.0" layoutY="151.0" />
+      <TextField fx:id="firstname" layoutX="240.0" layoutY="116.0" />
       <Label layoutX="159.0" layoutY="267.0" text="Amount:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <PasswordField fx:id="password1" layoutX="240.0" layoutY="264.0" />
-      <PasswordField fx:id="password11" layoutX="240.0" layoutY="301.0" />
       <Label layoutX="161.0" layoutY="304.0" text="Income:">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
+      <TextField fx:id="amount" layoutX="240.0" layoutY="264.0" />
+      <TextField fx:id="income" layoutX="240.0" layoutY="301.0" />
     </children>
 </AnchorPane>

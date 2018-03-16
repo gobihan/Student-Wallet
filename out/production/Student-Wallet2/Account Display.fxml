@@ -13,7 +13,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="141.0" layoutY="104.0" prefHeight="26.0" prefWidth="235.0" text="Welcome, Gobihan Manogarasingam">
+      <Label fx:id="name" layoutX="141.0" layoutY="104.0" onMouseClicked="#login" prefHeight="26.0" prefWidth="235.0" text="Welcome, Gobihan Manogarasingam">
          <font>
             <Font size="14.0" />
          </font></Label>

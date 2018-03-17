@@ -17,9 +17,8 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.sql.Date;
 public class Controller implements Initializable {
-
-
 @FXML
 Button login;
 @FXML
@@ -59,6 +58,8 @@ TextField transAmount;
 @FXML
 MenuButton transType;
 @FXML
+DatePicker transDate;
+@FXML
 MenuItem Transport;
 @FXML
 MenuItem Food;
@@ -74,6 +75,12 @@ MenuItem Savings;
 MenuItem Other;
 @FXML
 TextArea TransactionList;
+@FXML
+Button Confirm;
+@FXML
+Button close;
+@FXML
+Button refresh;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
@@ -85,7 +92,7 @@ ArrayList<Budget> budgets;
         Stage primaryStage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("register.fxml"));
         primaryStage.setTitle("Register");
-        primaryStage.setScene(new Scene(root, 500, 400));
+        primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.initOwner(login.getScene().getWindow());
         primaryStage.showAndWait();
@@ -121,9 +128,9 @@ ArrayList<Budget> budgets;
                         controller.displayTransaction();
                         controller.name.setText("Welcome, "+account.getFirstName()+ " "+account.getLastName());
                         controller.moneyinfo.setText("You have £"+account.getAccountAmount()+" in your account\nYour income is £"+account.getIncome()+ " per month.\nYou haven't gone over any budgets.");
-                        for(int i =0; i <transactions.size(); i++) controller.TransactionList.appendText(""+transactions.get(i).getTransactionName()+" "+ transactions.get(i).getTransactionAmount()+"\n");
+                        controller.refresh();
                         primaryStage.setTitle("Stock GUI");
-                        primaryStage.setScene(new Scene(root, 763, 521));
+                        primaryStage.setScene(new Scene(root));
                         primaryStage.initModality(Modality.NONE);
                         primaryStage.initOwner(login.getScene().getWindow());
                         primaryStage.show();
@@ -143,9 +150,8 @@ ArrayList<Budget> budgets;
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("addTransaction.fxml"));
         Parent root=loader.load();
-        Controller controller= loader.getController();
         primaryStage.setTitle("Stock GUI");
-        primaryStage.setScene(new Scene(root, 281, 242));
+        primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(addTrans.getScene().getWindow());
         primaryStage.show();
@@ -174,40 +180,86 @@ ArrayList<Budget> budgets;
                 transType.setText("Other");
             }
     }
-    public void inputTransaction(ActionEvent event){
-        String sql= "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) "+"VALUES('"+account.getAccountID()+"','"+transAmount.getText()+"','"+transName.getText()+"','"+transType.getText()+"','2017-03-17');";
+    public void inputTransaction(ActionEvent event) throws IOException{
+        String date=transDate.getConverter().toString(transDate.getValue());
+        System.out.println(transDate.getValue());
+        String[] dateStuff=date.split("/");
+        System.out.println(dateStuff[0]+ dateStuff[1] + dateStuff[2]);
+        java.sql.Date date1= new java.sql.Date(Integer.parseInt(dateStuff[2]),Integer.parseInt(dateStuff[1]), Integer.parseInt(dateStuff[0]));
+        Date date2 = Date.valueOf(transDate.getValue());
+        System.out.println(date2);
+        Transaction transaction=null;
+        if (transType.getText().equals("Transport")) {
+            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Transport);
+        } else if (transType.getText().equals("Food")) {
+            transaction= new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Food);
+        } else if (transType.getText().equals("Accomodation")) {
+            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Accomodation);
+        } else if (transType.getText().equals("Leisure")) {
+            transaction=new  Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Leisure);
+        } else if (transType.getText().equals("Debt")) {
+            transaction=new  Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Debt);
+        } else if (transType.getText().equals("Savings")) {
+            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Savings);
+        } else if (transType.getText().equals("Other") ) {
+            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Other);
+        }
+        System.out.println(transaction.getTransactionName());
+        transactions.add(transaction);
+
+        Stage stage = (Stage) confirmTrans.getScene().getWindow();
+        stage.close();
+
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("confirm.fxml"));
+        Parent root=loader.load();
+        Controller controller= loader.getController();
+        primaryStage.setTitle("Stock GUI");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.NONE);
+        primaryStage.initOwner(confirmTrans.getScene().getWindow());
+        primaryStage.show();
+
+    }
+    public void confirmTransaction(ActionEvent event)throws SQLException {
+        String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate()+"');";
         System.out.println(sql);
         try {
-            rs=db.query(sql);
+            rs = db.query(sql);
+        } catch (NullPointerException npe) {
+            System.out.println("Well done");
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        Stage stage = (Stage) close.getScene().getWindow();
+        stage.close();
+    }
 
+    public void cancelTransaction(ActionEvent event){
+        Stage stage = (Stage) close.getScene().getWindow();
+        stage.close();
     }
 
     public void displayTransaction(){
 
-            String sql = "SELECT ID, AccountID, Amount, Name, Category FROM Transactions";
+            String sql = "SELECT ID, AccountID, Amount, Name, Category, Date FROM Transactions";
 
             try {
                 rs = db.query(sql);
                 while (rs.next()) {
                     if(rs.getInt("AccountID") == account.getAccountID()) {
                         if (rs.getString("Category").equals("Transport")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Transport));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Transport));
                         } else if (rs.getString("Category").equals("Food")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Food));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Food));
                         } else if (rs.getString("Category").equals("Accomodation")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Accomodation));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Accomodation));
                         } else if (rs.getString("Category").equals("Leisure")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Leisure));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Leisure));
                         } else if (rs.getString("Category").equals("Debt")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Debt));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Debt));
                         } else if (rs.getString("Category").equals("Savings")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Savings));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Savings));
                         } else if (rs.getString("Category").equals("Other")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), new Date(), TransactionType.Other));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Other));
                         }
                     }
                 }
@@ -215,6 +267,11 @@ ArrayList<Budget> budgets;
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        public void refresh(){
+            TransactionList.clear();
+            for(int i =0; i <transactions.size(); i++) TransactionList.appendText(""+transactions.get(i).getTransactionName()+" "+ transactions.get(i).getTransactionAmount()+"\n");
         }
 
     @Override

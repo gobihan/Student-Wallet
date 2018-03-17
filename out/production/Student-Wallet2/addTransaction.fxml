@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -8,8 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="242.0" prefWidth="281.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane prefHeight="260.0" prefWidth="282.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
+      <DatePicker fx:id="transDate" layoutX="108.0" layoutY="146.0" prefHeight="26.0" prefWidth="149.0" />
       <TextField fx:id="transName" layoutX="108.0" layoutY="82.0" />
       <Label layoutX="13.0" layoutY="23.0" prefHeight="34.0" prefWidth="170.0" text="Add Transaction">
          <font>
@@ -18,9 +20,9 @@
       </Label>
       <Label layoutX="32.0" layoutY="86.0" text="Name" />
       <Label layoutX="32.0" layoutY="116.0" text="Amount" />
-      <Label layoutX="32.0" layoutY="150.0" text="Type " />
+      <Label layoutX="32.0" layoutY="188.0" text="Type " />
       <TextField fx:id="transAmount" layoutX="108.0" layoutY="112.0" />
-      <MenuButton fx:id="transType" layoutX="108.0" layoutY="146.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="149.0" text="Choose option">
+      <MenuButton fx:id="transType" layoutX="109.0" layoutY="184.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="149.0" text="Choose option">
         <items>
           <MenuItem fx:id="Transport" mnemonicParsing="false" onAction="#transactionType" text="Transport" />
           <MenuItem fx:id="Food" mnemonicParsing="false" onAction="#transactionType" text="Food" />
@@ -31,6 +33,7 @@
             <MenuItem fx:id="Other" mnemonicParsing="false" onAction="#transactionType" text="Other" />
         </items>
       </MenuButton>
-      <Button fx:id="confirmTrans" layoutX="194.0" layoutY="199.0" mnemonicParsing="false" onAction="#inputTransaction" prefHeight="26.0" prefWidth="64.0" text="Confirm" />
+      <Button fx:id="confirmTrans" layoutX="194.0" layoutY="219.0" mnemonicParsing="false" onAction="#inputTransaction" prefHeight="26.0" prefWidth="64.0" text="Confirm" />
+      <Label layoutX="32.0" layoutY="150.0" text="Date" />
    </children>
 </AnchorPane>

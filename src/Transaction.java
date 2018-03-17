@@ -4,8 +4,10 @@ public class Transaction {
 
     private int transactionID;
     private double transactionAmount;
+    private String transactionName;
     private Date transactionDate;
     private TransactionType categoryOfTransaction;
+    private int accountID;
 
     /**
      *
@@ -13,8 +15,11 @@ public class Transaction {
      * @param amount
      * @param category
      */
-    public Transaction(int ID, int amount, TransactionType category) {
+    public Transaction(int ID, int accountID, String name,int amount, Date date, TransactionType category) {
         transactionID=ID;
+        this.accountID=accountID;
+        transactionName=name;
+        transactionDate = date;
         transactionAmount=amount;
         categoryOfTransaction=category;
     }
@@ -43,5 +48,7 @@ public class Transaction {
     public TransactionType getCategoryOfTransaction() {
         return this.categoryOfTransaction;
     }
+
+    public String getTransactionName(){return this.transactionName;}
 
 }

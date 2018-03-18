@@ -95,13 +95,56 @@ TextArea displayDelete;
 Button delete;
 @FXML
 Button confirmDelete;
+@FXML
+Button budgetAdd;
+@FXML
+MenuButton budgetType;
+@FXML
+MenuItem General;
+@FXML
+MenuItem Transport2;
+@FXML
+MenuItem Food2;
+@FXML
+MenuItem Accomodation2;
+@FXML
+MenuItem Leisure2;
+@FXML
+MenuItem Debt2;
+@FXML
+MenuItem Savings2;
+@FXML
+MenuItem Other2;
+@FXML
+TextField budgetName;
+@FXML
+TextField budgetLimit;
+@FXML
+Button addBudget;
+@FXML
+Button Confirm2;
+@FXML
+Button close2;
+@FXML
+TextArea BudgetList;
+@FXML
+TextArea displaybudgetDelete;
+@FXML
+TextField deletebudgetName;
+@FXML
+Button searchCancel2;
+@FXML
+Button deleter2;
+@FXML
+Button confirmBudgetDelete;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
-static Account account;
-static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
-static Transaction deletedTransaction;
-ArrayList<Budget> budgets;
+private static Account account;
+private static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
+private static Transaction deletedTransaction;
+private static Budget deletedBudget;
+private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 
     public void openRegister(ActionEvent event)throws Exception{
         Stage primaryStage = new Stage();
@@ -141,6 +184,7 @@ ArrayList<Budget> budgets;
                         Parent root=loader.load();
                         Controller controller= loader.getController();
                         controller.displayTransaction();
+                        controller.displayBudgets();
                         controller.name.setText("Welcome, "+account.getFirstName()+ " "+account.getLastName());
                         controller.moneyinfo.setText("You have £"+account.getAccountAmount()+" in your account\nYour income is £"+account.getIncome()+ " per month.\nYou haven't gone over any budgets.");
                         controller.refresh();
@@ -336,9 +380,176 @@ ArrayList<Budget> budgets;
             }
         }
 
+        public void addBudget(ActionEvent event)throws IOException{
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("addBudget.fxml"));
+            Parent root=loader.load();
+            primaryStage.setTitle("Stock GUI");
+            primaryStage.setScene(new Scene(root));
+            primaryStage.initModality(Modality.NONE);
+            primaryStage.initOwner(budgetAdd.getScene().getWindow());
+            primaryStage.show();
+        }
+        public void budgetType(ActionEvent event){
+            if(event.getSource()==Transport2) {
+                budgetType.setText("Transport");
+            }
+            else if(event.getSource()==General){
+                budgetType.setText("General");
+            }
+            else if(event.getSource()==Food2){
+                budgetType.setText("Food");
+            }
+            else if(event.getSource()==Accomodation2){
+                budgetType.setText("Accomodation");
+            }
+            else if(event.getSource()==Leisure2){
+                budgetType.setText("Leisure");
+            }
+            else if(event.getSource()==Debt2){
+                budgetType.setText("Debt");
+            }
+            else if(event.getSource()==Savings2){
+                budgetType.setText("Savings");
+            }
+            else if(event.getSource()==Other2){
+                budgetType.setText("Other");
+            }
+        }
+        public void inputBudget(ActionEvent event)throws IOException{
+
+            Budget budget=null;
+            if (budgetType.getText().equals("Transport")) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Transport);
+            } else if (budgetType.getText().equals("Food")) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Food);
+            } else if (budgetType.getText().equals("Accomodation")) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Accomodation);
+            } else if (budgetType.getText().equals("Leisure")) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Leisure);
+            } else if (budgetType.getText().equals("Debt")) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Debt);
+            } else if (budgetType.getText().equals("Savings")) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Savings);
+            } else if (budgetType.getText().equals("Other") ) {
+                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Other);
+            }
+            System.out.println(budget.getBudgetID());
+            budgets.add(budget);
+
+            Stage stage = (Stage) addBudget.getScene().getWindow();
+            stage.close();
+
+            Stage primaryStage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmBudget.fxml"));
+            Parent root=loader.load();
+            primaryStage.setTitle("Stock GUI");
+            primaryStage.setScene(new Scene(root));
+            primaryStage.initModality(Modality.NONE);
+            primaryStage.initOwner(addBudget.getScene().getWindow());
+            primaryStage.show();
+        }
+        public void confirmBudget(ActionEvent event){
+            String sql = "INSERT INTO Budgets ( AccountID, CurrentSpent, SpendingLimit , Name, Category) " + "VALUES('" + account.getAccountID() + "','" + budgets.get(budgets.size() - 1).getCurrentSpent()+ "','" + budgets.get(budgets.size() - 1).getSpendingLimit()+ "','" + budgets.get(budgets.size() - 1).getBudgetName() + "','" + budgets.get(budgets.size() - 1).getCategoryForBudget().toString() + "');";
+            System.out.println(sql);
+            try {
+                rs = db.query(sql);
+            } catch (NullPointerException npe) {
+                System.out.println("Well done");
+            }
+            Stage stage = (Stage) close2.getScene().getWindow();
+            stage.close();
+        }
+        public void cancelBudget(ActionEvent event){
+            Stage stage = (Stage) close2.getScene().getWindow();
+            stage.close();
+        }
+    public void displayBudgets(){
+        String sql = "SELECT ID, AccountID, CurrentSpent, SpendingLimit, Name, Category FROM Budgets";
+
+        try {
+            rs = db.query(sql);
+            while (rs.next()) {
+                if(rs.getInt("AccountID") == account.getAccountID()) {
+                    if (rs.getString("Category").equals("Transport")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Transport));
+                    } else if (rs.getString("Category").equals("Food")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Food));
+                    } else if (rs.getString("Category").equals("Accomodation")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Accomodation));
+                    } else if (rs.getString("Category").equals("Leisure")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"),rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Leisure));
+                    } else if (rs.getString("Category").equals("Debt")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Debt));
+                    } else if (rs.getString("Category").equals("Savings")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Savings));
+                    } else if (rs.getString("Category").equals("Other")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Other));
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void openBudgetDelete()throws IOException{
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("deleteBudget.fxml"));
+        Parent root=loader.load();
+        primaryStage.setTitle("Stock GUI");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.NONE);
+        primaryStage.initOwner(delete.getScene().getWindow());
+        primaryStage.show();
+
+    }
+    public void searchBudget(ActionEvent event){
+        Budget budget=null;
+        for(int i=0; i<budgets.size(); i++){
+            if(budgets.get(i).getBudgetName().equals(deletebudgetName.getText())){
+                budget=budgets.get(i);
+                break;
+            }
+        }
+        if(budget==null){
+            System.out.println("No such transaction");
+            return;
+        }
+
+        displaybudgetDelete.appendText(budget.getBudgetName()+"\n"+budget.getSpendingLimit()+"\n"+budget.getCategoryForBudget().toString()+"\n"+budget.getCurrentSpent());
+        deletedBudget=budget;
+    }
+    public void confirmBudgetDelete(ActionEvent event)throws IOException{
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmBudgetDelete.fxml"));
+        Parent root=loader.load();
+        primaryStage.setTitle("Stock GUI");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.NONE);
+        primaryStage.initOwner(deleter2.getScene().getWindow());
+        primaryStage.show();
+    }
+    public void deleteBudget(){
+        String sql="DELETE FROM Budgets WHERE ID='"+deletedBudget.getBudgetID()+"';";
+        try{
+            rs=db.query(sql);
+            budgets.remove(deletedBudget);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        Stage stage = (Stage) confirmBudgetDelete.getScene().getWindow();
+        stage.close();
+
+    }
+
         public void refresh(){
             TransactionList.clear();
+            BudgetList.clear();
             for(int i =0; i <transactions.size(); i++) TransactionList.appendText(""+transactions.get(i).getTransactionName()+" "+ transactions.get(i).getTransactionAmount()+"\n");
+            for(int j=0; j<budgets.size(); j++) BudgetList.appendText(""+budgets.get(j).getBudgetName()+" "+budgets.get(j).getSpendingLimit()+"\n");
         }
 
     @Override

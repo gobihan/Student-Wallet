@@ -1,6 +1,9 @@
 public class Budget {
 
     private int budgetID;
+    private int accountID;
+    private String budgetName;
+    private double currentSpent;
     private double spendingLimit;
     private TransactionType categoryForBudget;
 
@@ -9,8 +12,11 @@ public class Budget {
      * @param ID
      * @param limit
      */
-    public Budget(int ID, int limit, TransactionType category) {
+    public Budget(int ID,int accountID,String name, double currentSpent, double limit,TransactionType category) {
         budgetID=ID;
+        this.accountID=accountID;
+        this.budgetName=name;
+        this.currentSpent=currentSpent;
         spendingLimit=limit;
         categoryForBudget=category;
     }
@@ -36,9 +42,15 @@ public class Budget {
         return this.budgetID;
     }
 
+    public int getAcccountID(){return this.accountID;}
+
+    public String getBudgetName(){return this.budgetName;}
+
     public double getSpendingLimit() {
         return this.spendingLimit;
     }
+
+    public double getCurrentSpent(){return this.currentSpent;}
 
     public TransactionType getCategoryForBudget() {
         return this.categoryForBudget;

@@ -17,18 +17,13 @@
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextArea layoutX="345.0" layoutY="334.0" prefHeight="135.0" prefWidth="400.0" />
+      <TextArea fx:id="BudgetList" layoutX="345.0" layoutY="334.0" prefHeight="135.0" prefWidth="400.0" />
       <TextArea fx:id="TransactionList" layoutX="25.0" layoutY="168.0" prefHeight="302.0" prefWidth="304.0" />
       <Label layoutX="141.0" layoutY="149.0" prefHeight="18.0" prefWidth="70.0" text="Transactions" />
       <Label layoutX="523.0" layoutY="316.0" text="Budgets" />
-      <Button layoutX="526.0" layoutY="278.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="106.0" text="Add Budget" />
+      <Button fx:id="budgetAdd" layoutX="526.0" layoutY="278.0" mnemonicParsing="false" onAction="#addBudget" prefHeight="26.0" prefWidth="106.0" text="Add Budget" />
       <Button fx:id="addTrans" layoutX="526.0" layoutY="247.0" mnemonicParsing="false" onAction="#addTransaction" prefHeight="18.0" prefWidth="106.0" text="Add Transaction" />
       <Button fx:id="delete" layoutX="123.0" layoutY="472.0" mnemonicParsing="false" onAction="#openDelete" prefHeight="24.0" prefWidth="106.0" text="Delete Transaction">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Button>
-      <Button layoutX="497.0" layoutY="471.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Delete Budget">
          <font>
             <Font size="11.0" />
          </font>
@@ -48,6 +43,11 @@
       </Button>
       <Button layoutX="579.0" layoutY="104.0" mnemonicParsing="false" text="Change personal information" />
       <Button fx:id="refresh" layoutX="632.0" layoutY="188.0" mnemonicParsing="false" onAction="#refresh" prefHeight="24.0" prefWidth="106.0" text="Refresh">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <Button layoutX="495.0" layoutY="470.0" mnemonicParsing="false" onAction="#openBudgetDelete" prefHeight="26.0" prefWidth="98.0" text="Delete Budget">
          <font>
             <Font size="11.0" />
          </font>

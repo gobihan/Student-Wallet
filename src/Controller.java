@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.sql.Date;
 public class Controller implements Initializable {
@@ -186,6 +188,7 @@ ArrayList<Budget> budgets;
         String[] dateStuff=date.split("/");
         System.out.println(dateStuff[0]+ dateStuff[1] + dateStuff[2]);
         java.sql.Date date1= new java.sql.Date(Integer.parseInt(dateStuff[2]),Integer.parseInt(dateStuff[1]), Integer.parseInt(dateStuff[0]));
+
         Date date2 = Date.valueOf(transDate.getValue());
         System.out.println(date2);
         Transaction transaction=null;
@@ -213,7 +216,6 @@ ArrayList<Budget> budgets;
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("confirm.fxml"));
         Parent root=loader.load();
-        Controller controller= loader.getController();
         primaryStage.setTitle("Stock GUI");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
@@ -222,7 +224,7 @@ ArrayList<Budget> budgets;
 
     }
     public void confirmTransaction(ActionEvent event)throws SQLException {
-        String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate()+"');";
+        String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate().toString()+"');";
         System.out.println(sql);
         try {
             rs = db.query(sql);
@@ -246,20 +248,21 @@ ArrayList<Budget> budgets;
                 rs = db.query(sql);
                 while (rs.next()) {
                     if(rs.getInt("AccountID") == account.getAccountID()) {
+                        java.util.Date date=new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("Date"));
                         if (rs.getString("Category").equals("Transport")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Transport));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Transport));
                         } else if (rs.getString("Category").equals("Food")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Food));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Food));
                         } else if (rs.getString("Category").equals("Accomodation")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Accomodation));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Accomodation));
                         } else if (rs.getString("Category").equals("Leisure")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Leisure));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Leisure));
                         } else if (rs.getString("Category").equals("Debt")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Debt));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Debt));
                         } else if (rs.getString("Category").equals("Savings")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Savings));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Savings));
                         } else if (rs.getString("Category").equals("Other")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), rs.getDate("Date"), TransactionType.Other));
+                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Other));
                         }
                     }
                 }

@@ -83,11 +83,24 @@ Button Confirm;
 Button close;
 @FXML
 Button refresh;
+@FXML
+Button deleter;
+@FXML
+Button searchCancel;
+@FXML
+TextField deleteName;
+@FXML
+TextArea displayDelete;
+@FXML
+Button delete;
+@FXML
+Button confirmDelete;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
 static Account account;
 static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
+static Transaction deletedTransaction;
 ArrayList<Budget> budgets;
 
     public void openRegister(ActionEvent event)throws Exception{
@@ -239,9 +252,60 @@ ArrayList<Budget> budgets;
         Stage stage = (Stage) close.getScene().getWindow();
         stage.close();
     }
+    public void openDelete()throws IOException{
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("deleteTransaction.fxml"));
+        Parent root=loader.load();
+        primaryStage.setTitle("Stock GUI");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.NONE);
+        primaryStage.initOwner(delete.getScene().getWindow());
+        primaryStage.show();
+
+    }
+    public void searchTransaction(ActionEvent event){
+        Transaction transaction=null;
+        for(int i=0; i<transactions.size(); i++){
+            if(transactions.get(i).getTransactionName().equals(deleteName.getText())){
+                transaction=transactions.get(i);
+                break;
+            }
+        }
+        if(transaction==null){
+            System.out.println("No such transaction");
+            return;
+        }
+
+        displayDelete.appendText(transaction.getTransactionName()+"\n"+transaction.getTransactionAmount()+"\n"+transaction.getCategoryOfTransaction().toString()+"\n"+transaction.getTransactionDate().toString());
+        deletedTransaction=transaction;
+    }
+
+    public void confirmDelete(ActionEvent event)throws IOException{
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmDelete.fxml"));
+        Parent root=loader.load();
+        primaryStage.setTitle("Stock GUI");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.NONE);
+        primaryStage.initOwner(deleter.getScene().getWindow());
+        primaryStage.show();
+    }
+    public void deleteTransaction(){
+        String sql="DELETE FROM Transactions WHERE ID='"+deletedTransaction.getTransactionID()+"';";
+        try{
+            rs=db.query(sql);
+            transactions.remove(deletedTransaction);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        Stage stage = (Stage) confirmDelete.getScene().getWindow();
+        stage.close();
+
+    }
 
     public void displayTransaction(){
-
             String sql = "SELECT ID, AccountID, Amount, Name, Category, Date FROM Transactions";
 
             try {

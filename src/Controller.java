@@ -142,6 +142,7 @@ SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
 private static Account account;
 private static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
+private static Transaction transaction;
 private static Transaction deletedTransaction;
 private static Budget deletedBudget;
 private static ArrayList<Budget> budgets= new ArrayList<Budget>();
@@ -248,24 +249,22 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 
         Date date2 = Date.valueOf(transDate.getValue());
         System.out.println(date2);
-        Transaction transaction=null;
         if (transType.getText().equals("Transport")) {
-            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Transport);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Transport);
         } else if (transType.getText().equals("Food")) {
-            transaction= new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Food);
+            transaction= new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Food);
         } else if (transType.getText().equals("Accomodation")) {
-            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Accomodation);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Accomodation);
         } else if (transType.getText().equals("Leisure")) {
-            transaction=new  Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Leisure);
+            transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Leisure);
         } else if (transType.getText().equals("Debt")) {
-            transaction=new  Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Debt);
+            transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Debt);
         } else if (transType.getText().equals("Savings")) {
-            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Savings);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Savings);
         } else if (transType.getText().equals("Other") ) {
-            transaction=new Transaction(transactions.size()+1,account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Other);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Other);
         }
         System.out.println(transaction.getTransactionName());
-        transactions.add(transaction);
 
         Stage stage = (Stage) confirmTrans.getScene().getWindow();
         stage.close();
@@ -281,6 +280,7 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 
     }
     public void confirmTransaction(ActionEvent event)throws SQLException {
+        transactions.add(transaction);
         String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate().toString()+"');";
         System.out.println(sql);
         try {
@@ -288,6 +288,7 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
         } catch (NullPointerException npe) {
             System.out.println("Well done");
         }
+        searchBudgetOfCategory(transaction);
         Stage stage = (Stage) close.getScene().getWindow();
         stage.close();
     }
@@ -420,19 +421,19 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 
             Budget budget=null;
             if (budgetType.getText().equals("Transport")) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Transport);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Transport);
             } else if (budgetType.getText().equals("Food")) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Food);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Food);
             } else if (budgetType.getText().equals("Accomodation")) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Accomodation);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Accomodation);
             } else if (budgetType.getText().equals("Leisure")) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Leisure);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Leisure);
             } else if (budgetType.getText().equals("Debt")) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Debt);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Debt);
             } else if (budgetType.getText().equals("Savings")) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Savings);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Savings);
             } else if (budgetType.getText().equals("Other") ) {
-                budget=new Budget(budgets.size()+1,account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Other);
+                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Other);
             }
             System.out.println(budget.getBudgetID());
             budgets.add(budget);
@@ -542,6 +543,23 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 
         Stage stage = (Stage) confirmBudgetDelete.getScene().getWindow();
         stage.close();
+
+    }
+    public void searchBudgetOfCategory(Transaction transaction){
+        try {
+            for (int i = 0; i < budgets.size(); i++) {
+                if (budgets.get(i).getCategoryForBudget() == transaction.getCategoryOfTransaction()) {
+                    budgets.get(i).setCurrentSpend(transaction.getTransactionAmount());
+                    String sql = " UPDATE Budgets SET CurrentSpent='" + budgets.get(i).getCurrentSpent() + "' WHERE ID='" + budgets.get(i).getBudgetID() + "' AND AccountID='" + account.getAccountID() + "';";
+                    System.out.println(sql);
+
+                    rs = db.query(sql);
+
+                }
+            }
+        }
+        catch(Exception e){e.printStackTrace();}
+
 
     }
 

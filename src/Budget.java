@@ -52,6 +52,10 @@ public class Budget {
 
     public double getCurrentSpent(){return this.currentSpent;}
 
+    public void setCurrentSpend(double transactionAmount){
+        this.currentSpent=this.currentSpent+transactionAmount;
+    }
+
     public TransactionType getCategoryForBudget() {
         return this.categoryForBudget;
     }

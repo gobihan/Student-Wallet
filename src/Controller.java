@@ -176,7 +176,6 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
 
     public void register(ActionEvent event) throws Exception{
-        Account account= new Account(1,"Gobihan","Manogarasingam","gobz97","monkeyboy10",420, 42000);
         String sql= "INSERT INTO Account (Firstname,Lastname,Username,Password,Amount,Income) "+"VALUES('"+firstname.getText()+"','"+secondname.getText()+"','"+username2.getText()+"','"+password2.getText()+"',"+amount.getText()+","+income.getText()+");";
         System.out.println(sql);
         try {
@@ -185,6 +184,8 @@ ObservableList data2= FXCollections.observableList(budgets);
         catch (Exception e) {
             e.printStackTrace();
         }
+        Stage stage = (Stage) register.getScene().getWindow();
+        stage.close();
     }
     public void login(ActionEvent event) throws Exception{
             String sql = "SELECT  ID, Firstname, Lastname, Username, Password, Amount, Income  FROM Account";
@@ -309,11 +310,12 @@ ObservableList data2= FXCollections.observableList(budgets);
             System.out.println("Well done");
         }
         searchBudgetOfCategory(transaction);
+
+        //TransactionTable.refresh();
+        //BudgetTable.refresh();
         Stage stage = (Stage) close.getScene().getWindow();
         stage.close();
-//        FXMLLoader loader1 = new FXMLLoader(getClass().getResource("AccountDisplay.fxml"));
-//        Controller c = loader1.getController();
-//        c.refresh();
+
     }
 
     public void cancelTransaction(ActionEvent event){
@@ -497,6 +499,7 @@ ObservableList data2= FXCollections.observableList(budgets);
             } catch (NullPointerException npe) {
                 System.out.println("Well done");
             }
+          //  BudgetTable.refresh();
             Stage stage = (Stage) close2.getScene().getWindow();
             stage.close();
         }
@@ -607,6 +610,7 @@ ObservableList data2= FXCollections.observableList(budgets);
             names.setCellValueFactory(new PropertyValueFactory<Transaction,String>("transactionName"));
             amounts.setCellValueFactory(new PropertyValueFactory<Transaction,String>("transactionAmount"));
             categories.setCellValueFactory(new PropertyValueFactory<Transaction,String>("categoryOfTransaction"));
+
             BudgetTable.setItems(data2);
             categories2.setCellValueFactory(new PropertyValueFactory<Transaction,String>("categoryForBudget"));
             limits.setCellValueFactory(new PropertyValueFactory<Transaction,String>("spendingLimit"));

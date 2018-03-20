@@ -152,6 +152,12 @@ TableColumn categories2;
 TableColumn limits;
 @FXML
 TableColumn spends;
+@FXML
+Label exists;
+@FXML
+Button deleteAccount;
+@FXML
+Button close3;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
@@ -176,16 +182,32 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
 
     public void register(ActionEvent event) throws Exception{
-        String sql= "INSERT INTO Account (Firstname,Lastname,Username,Password,Amount,Income) "+"VALUES('"+firstname.getText()+"','"+secondname.getText()+"','"+username2.getText()+"','"+password2.getText()+"',"+amount.getText()+","+income.getText()+");";
-        System.out.println(sql);
-        try {
-            rs=db.query(sql);
+        boolean flag=false;
+        String sql0="SELECT Username FROM Account";
+        try{
+            rs=db.query(sql0);
+            while(rs.next()){
+                if(username2.getText().equals(rs.getString("Username"))){
+                    System.out.println("Fuck off");
+                    exists.setText("Username already exists");
+                    flag=true;
+                }
+            }
         }
-        catch (Exception e) {
+        catch(Exception e){
             e.printStackTrace();
         }
-        Stage stage = (Stage) register.getScene().getWindow();
-        stage.close();
+        if(!flag) {
+            String sql = "INSERT INTO Account (Firstname,Lastname,Username,Password,Amount,Income) " + "VALUES('" + firstname.getText() + "','" + secondname.getText() + "','" + username2.getText() + "','" + password2.getText() + "'," + amount.getText() + "," + income.getText() + ");";
+            System.out.println(sql);
+            try {
+                db.update(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Stage stage = (Stage) register.getScene().getWindow();
+            stage.close();
+        }
     }
     public void login(ActionEvent event) throws Exception{
             String sql = "SELECT  ID, Firstname, Lastname, Username, Password, Amount, Income  FROM Account";
@@ -224,6 +246,29 @@ ObservableList data2= FXCollections.observableList(budgets);
             catch (Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    public void opendeleteAccount() throws IOException{
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("confirmDeleteAccount.fxml"));
+        primaryStage.setTitle("Register");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.initOwner(deleteAccount.getScene().getWindow());
+        primaryStage.showAndWait();
+    }
+
+    public void confirmDeleteAccount(){
+        String sql="DELETE FROM Account WHERE ID='"+account.getAccountID()+"';";
+        try{ db.update(sql);}
+        catch(Exception e){e.printStackTrace();}
+        //Stage stage= (Stage) deleteAccount.getScene().getWindow();
+        //stage.close();
+    }
+
+    public void cancelDeleteAccount(){
+        Stage stage = (Stage) close3.getScene().getWindow();
+        stage.close();
     }
 
     public void addTransaction(ActionEvent event)throws IOException{
@@ -305,7 +350,7 @@ ObservableList data2= FXCollections.observableList(budgets);
         String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate().toString()+"');";
         System.out.println(sql);
         try {
-            rs = db.query(sql);
+            db.update(sql);
         } catch (NullPointerException npe) {
             System.out.println("Well done");
         }
@@ -363,7 +408,7 @@ ObservableList data2= FXCollections.observableList(budgets);
     public void deleteTransaction(){
         String sql="DELETE FROM Transactions WHERE ID='"+deletedTransaction.getTransactionID()+"';";
         try{
-            rs=db.query(sql);
+            db.update(sql);
             transactions.remove(deletedTransaction);
         }
         catch(Exception e){
@@ -495,7 +540,7 @@ ObservableList data2= FXCollections.observableList(budgets);
             String sql = "INSERT INTO Budgets ( AccountID, CurrentSpent, SpendingLimit , Name, Category) " + "VALUES('" + account.getAccountID() + "','" + budgets.get(budgets.size() - 1).getCurrentSpent()+ "','" + budgets.get(budgets.size() - 1).getSpendingLimit()+ "','lool','" + budgets.get(budgets.size() - 1).getCategoryForBudget().toString() + "');";
             System.out.println(sql);
             try {
-                rs = db.query(sql);
+                 db.update(sql);
             } catch (NullPointerException npe) {
                 System.out.println("Well done");
             }
@@ -576,7 +621,7 @@ ObservableList data2= FXCollections.observableList(budgets);
     public void deleteBudget(){
         String sql="DELETE FROM Budgets WHERE ID='"+deletedBudget.getBudgetID()+"';";
         try{
-            rs=db.query(sql);
+            db.update(sql);
             budgets.remove(deletedBudget);
         }
         catch(Exception e){
@@ -595,7 +640,7 @@ ObservableList data2= FXCollections.observableList(budgets);
                     String sql = " UPDATE Budgets SET CurrentSpent='" + budgets.get(i).getCurrentSpent() + "' WHERE ID='" + budgets.get(i).getBudgetID() + "' AND AccountID='" + account.getAccountID() + "';";
                     System.out.println(sql);
 
-                    rs = db.query(sql);
+                    db.update(sql);
 
                 }
             }
@@ -605,7 +650,7 @@ ObservableList data2= FXCollections.observableList(budgets);
 
     }
 
-        public void refresh(){
+      public void refresh(){
             TransactionTable.setItems(data);
             names.setCellValueFactory(new PropertyValueFactory<Transaction,String>("transactionName"));
             amounts.setCellValueFactory(new PropertyValueFactory<Transaction,String>("transactionAmount"));
@@ -616,6 +661,8 @@ ObservableList data2= FXCollections.observableList(budgets);
             limits.setCellValueFactory(new PropertyValueFactory<Transaction,String>("spendingLimit"));
             spends.setCellValueFactory(new PropertyValueFactory<Transaction,String>("currentSpent"));
         }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

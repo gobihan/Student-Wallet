@@ -66,5 +66,6 @@
             <TableColumn fx:id="spends" prefWidth="98.40008544921875" text="Current Spent" />
         </columns>
       </TableView>
+      <Button fx:id="deleteAccount" layoutX="636.0" layoutY="145.0" mnemonicParsing="false" onAction="#opendeleteAccount" text="Delete Account" />
    </children>
 </AnchorPane>

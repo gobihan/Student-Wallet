@@ -1,4 +1,5 @@
 import javafx.beans.Observable;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -8,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -77,8 +79,6 @@ MenuItem Savings;
 @FXML
 MenuItem Other;
 @FXML
-TextArea TransactionList;
-@FXML
 Button Confirm;
 @FXML
 Button close;
@@ -117,8 +117,6 @@ MenuItem Savings2;
 @FXML
 MenuItem Other2;
 @FXML
-TextField budgetName;
-@FXML
 TextField budgetLimit;
 @FXML
 Button addBudget;
@@ -126,8 +124,6 @@ Button addBudget;
 Button Confirm2;
 @FXML
 Button close2;
-@FXML
-TextArea BudgetList;
 @FXML
 TextArea displaybudgetDelete;
 @FXML
@@ -140,6 +136,22 @@ Button deleter2;
 Button confirmBudgetDelete;
 @FXML
 Label budgetExists;
+@FXML
+TableView TransactionTable;
+@FXML
+TableView BudgetTable;
+@FXML
+TableColumn names;
+@FXML
+TableColumn amounts;
+@FXML
+TableColumn categories;
+@FXML
+TableColumn categories2;
+@FXML
+TableColumn limits;
+@FXML
+TableColumn spends;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
@@ -150,6 +162,8 @@ private static Budget budget;
 private static Transaction deletedTransaction;
 private static Budget deletedBudget;
 private static ArrayList<Budget> budgets= new ArrayList<Budget>();
+ObservableList data= FXCollections.observableList(transactions);
+ObservableList data2= FXCollections.observableList(budgets);
 
     public void openRegister(ActionEvent event)throws Exception{
         Stage primaryStage = new Stage();
@@ -589,10 +603,14 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
     }
 
         public void refresh(){
-            TransactionList.clear();
-            BudgetList.clear();
-            for(int i =0; i <transactions.size(); i++) TransactionList.appendText(""+transactions.get(i).getTransactionName()+" "+ transactions.get(i).getTransactionAmount()+"\n");
-            for(int j=0; j<budgets.size(); j++) BudgetList.appendText(""+budgets.get(j).getCategoryForBudget().toString()+" "+budgets.get(j).getSpendingLimit()+"\n");
+            TransactionTable.setItems(data);
+            names.setCellValueFactory(new PropertyValueFactory<Transaction,String>("transactionName"));
+            amounts.setCellValueFactory(new PropertyValueFactory<Transaction,String>("transactionAmount"));
+            categories.setCellValueFactory(new PropertyValueFactory<Transaction,String>("categoryOfTransaction"));
+            BudgetTable.setItems(data2);
+            categories2.setCellValueFactory(new PropertyValueFactory<Transaction,String>("categoryForBudget"));
+            limits.setCellValueFactory(new PropertyValueFactory<Transaction,String>("spendingLimit"));
+            spends.setCellValueFactory(new PropertyValueFactory<Transaction,String>("currentSpent"));
         }
 
     @Override

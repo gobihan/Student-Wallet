@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -137,12 +138,15 @@ Button searchCancel2;
 Button deleter2;
 @FXML
 Button confirmBudgetDelete;
+@FXML
+Label budgetExists;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
 private static Account account;
 private static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
 private static Transaction transaction;
+private static Budget budget;
 private static Transaction deletedTransaction;
 private static Budget deletedBudget;
 private static ArrayList<Budget> budgets= new ArrayList<Budget>();
@@ -197,7 +201,8 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
                     }
                 }
                 if(!flag){
-                    loginFail.setText("Either your username and password is incorrect");
+                    loginFail.setText("Incorrect credentials");
+                    loginFail.setTextFill(Color.valueOf("red"));
                 }
 
             }
@@ -215,6 +220,7 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(addTrans.getScene().getWindow());
         primaryStage.show();
+
     }
 
     public void transactionType(ActionEvent event){
@@ -291,6 +297,9 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
         searchBudgetOfCategory(transaction);
         Stage stage = (Stage) close.getScene().getWindow();
         stage.close();
+//        FXMLLoader loader1 = new FXMLLoader(getClass().getResource("AccountDisplay.fxml"));
+//        Controller c = loader1.getController();
+//        c.refresh();
     }
 
     public void cancelTransaction(ActionEvent event){
@@ -419,39 +428,55 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
         }
         public void inputBudget(ActionEvent event)throws IOException{
 
-            Budget budget=null;
+
             if (budgetType.getText().equals("Transport")) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Transport);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Transport);
             } else if (budgetType.getText().equals("Food")) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Food);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Food);
             } else if (budgetType.getText().equals("Accomodation")) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Accomodation);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Accomodation);
             } else if (budgetType.getText().equals("Leisure")) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Leisure);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Leisure);
             } else if (budgetType.getText().equals("Debt")) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Debt);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Debt);
             } else if (budgetType.getText().equals("Savings")) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Savings);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Savings);
             } else if (budgetType.getText().equals("Other") ) {
-                budget=new Budget(budgets.size(),account.getAccountID(),budgetName.getText(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Other);
+                budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Other);
             }
             System.out.println(budget.getBudgetID());
-            budgets.add(budget);
+            boolean flag=false;
+            String sql="SELECT AccountID, Category FROM Budgets";
+            try{
+                rs=db.query(sql);
+                while(rs.next()){
+                    if(account.getAccountID()==rs.getInt("AccountID") && budget.getCategoryForBudget().toString().equals(rs.getString("Category"))){
+                        System.out.println("Fuck off");
+                        flag=true;
+                        budgetExists.setText("You already have a budget for this category");
+                    }
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+            if(!flag) {
+                Stage stage = (Stage) addBudget.getScene().getWindow();
+                stage.close();
 
-            Stage stage = (Stage) addBudget.getScene().getWindow();
-            stage.close();
-
-            Stage primaryStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmBudget.fxml"));
-            Parent root=loader.load();
-            primaryStage.setTitle("Stock GUI");
-            primaryStage.setScene(new Scene(root));
-            primaryStage.initModality(Modality.NONE);
-            primaryStage.initOwner(addBudget.getScene().getWindow());
-            primaryStage.show();
+                Stage primaryStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmBudget.fxml"));
+                Parent root = loader.load();
+                primaryStage.setTitle("Stock GUI");
+                primaryStage.setScene(new Scene(root));
+                primaryStage.initModality(Modality.NONE);
+                primaryStage.initOwner(addBudget.getScene().getWindow());
+                primaryStage.show();
+            }
         }
         public void confirmBudget(ActionEvent event){
-            String sql = "INSERT INTO Budgets ( AccountID, CurrentSpent, SpendingLimit , Name, Category) " + "VALUES('" + account.getAccountID() + "','" + budgets.get(budgets.size() - 1).getCurrentSpent()+ "','" + budgets.get(budgets.size() - 1).getSpendingLimit()+ "','" + budgets.get(budgets.size() - 1).getBudgetName() + "','" + budgets.get(budgets.size() - 1).getCategoryForBudget().toString() + "');";
+            budgets.add(budget);
+            String sql = "INSERT INTO Budgets ( AccountID, CurrentSpent, SpendingLimit , Name, Category) " + "VALUES('" + account.getAccountID() + "','" + budgets.get(budgets.size() - 1).getCurrentSpent()+ "','" + budgets.get(budgets.size() - 1).getSpendingLimit()+ "','lool','" + budgets.get(budgets.size() - 1).getCategoryForBudget().toString() + "');";
             System.out.println(sql);
             try {
                 rs = db.query(sql);
@@ -466,26 +491,26 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
             stage.close();
         }
     public void displayBudgets(){
-        String sql = "SELECT ID, AccountID, CurrentSpent, SpendingLimit, Name, Category FROM Budgets";
+        String sql = "SELECT ID, AccountID, CurrentSpent, SpendingLimit, Category FROM Budgets";
 
         try {
             rs = db.query(sql);
             while (rs.next()) {
                 if(rs.getInt("AccountID") == account.getAccountID()) {
                     if (rs.getString("Category").equals("Transport")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Transport));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Transport));
                     } else if (rs.getString("Category").equals("Food")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Food));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Food));
                     } else if (rs.getString("Category").equals("Accomodation")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Accomodation));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Accomodation));
                     } else if (rs.getString("Category").equals("Leisure")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"),rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Leisure));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Leisure));
                     } else if (rs.getString("Category").equals("Debt")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Debt));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Debt));
                     } else if (rs.getString("Category").equals("Savings")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Savings));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Savings));
                     } else if (rs.getString("Category").equals("Other")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Other));
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Other));
                     }
                 }
             }
@@ -508,7 +533,7 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
     public void searchBudget(ActionEvent event){
         Budget budget=null;
         for(int i=0; i<budgets.size(); i++){
-            if(budgets.get(i).getBudgetName().equals(deletebudgetName.getText())){
+            if(budgets.get(i).getCategoryForBudget().toString().equals(deletebudgetName.getText())){
                 budget=budgets.get(i);
                 break;
             }
@@ -518,7 +543,7 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
             return;
         }
 
-        displaybudgetDelete.appendText(budget.getBudgetName()+"\n"+budget.getSpendingLimit()+"\n"+budget.getCategoryForBudget().toString()+"\n"+budget.getCurrentSpent());
+        displaybudgetDelete.appendText(budget.getSpendingLimit()+"\n"+budget.getCategoryForBudget().toString()+"\n"+budget.getCurrentSpent());
         deletedBudget=budget;
     }
     public void confirmBudgetDelete(ActionEvent event)throws IOException{
@@ -567,7 +592,7 @@ private static ArrayList<Budget> budgets= new ArrayList<Budget>();
             TransactionList.clear();
             BudgetList.clear();
             for(int i =0; i <transactions.size(); i++) TransactionList.appendText(""+transactions.get(i).getTransactionName()+" "+ transactions.get(i).getTransactionAmount()+"\n");
-            for(int j=0; j<budgets.size(); j++) BudgetList.appendText(""+budgets.get(j).getBudgetName()+" "+budgets.get(j).getSpendingLimit()+"\n");
+            for(int j=0; j<budgets.size(); j++) BudgetList.appendText(""+budgets.get(j).getCategoryForBudget().toString()+" "+budgets.get(j).getSpendingLimit()+"\n");
         }
 
     @Override

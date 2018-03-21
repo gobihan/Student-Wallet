@@ -21,14 +21,17 @@
             </Label>
             <VBox spacing="10.0">
                <children>
-                  <HBox>
+                  <HBox spacing="10.0">
                      <children>
                         <Label fx:id="name" onMouseClicked="#login" prefHeight="26.0" prefWidth="235.0" text="Welcome, Gobihan Manogarasingam">
                            <font>
                               <Font size="14.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets right="30.0" />
+                           </HBox.margin>
                         </Label>
-                        <Button mnemonicParsing="false" text="Change personal information" />
+                        <Button fx:id="cpi" mnemonicParsing="false" onAction="#openChange" text="Change personal information" />
                         <Button fx:id="refresh" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#refresh" prefHeight="24.0" prefWidth="106.0" text="Refresh" />
                      </children>
                   </HBox>

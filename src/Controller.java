@@ -158,6 +158,22 @@ Label exists;
 Button deleteAccount;
 @FXML
 Button close3;
+@FXML
+TextField changepword;
+@FXML
+TextField changeuname;
+@FXML
+TextField changeName;
+@FXML
+TextField changelastname;
+@FXML
+TextField changeamount;
+@FXML
+TextField changeincome;
+@FXML
+Button cpi;
+@FXML
+Button change;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
@@ -225,6 +241,8 @@ ObservableList data2= FXCollections.observableList(budgets);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("AccountDisplay.fxml"));
                         Parent root=loader.load();
                         Controller controller= loader.getController();
+                        transactions.removeAll(data);
+                        budgets.removeAll(data2);
                         controller.displayTransaction();
                         controller.displayBudgets();
                         controller.name.setText("Welcome, "+account.getFirstName()+ " "+account.getLastName());
@@ -646,8 +664,21 @@ ObservableList data2= FXCollections.observableList(budgets);
             }
         }
         catch(Exception e){e.printStackTrace();}
+    }
 
+    public void openChange(ActionEvent event)throws IOException{
+        Stage primaryStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("changeInfo.fxml"));
+        Parent root=loader.load();
+        primaryStage.setTitle("Stock GUI");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.initModality(Modality.NONE);
+        primaryStage.initOwner(cpi.getScene().getWindow());
+        primaryStage.show();
+    }
 
+    public void confirmChange(ActionEvent event)throws IOException{
+        System.out.println("hello");
     }
 
       public void refresh(){

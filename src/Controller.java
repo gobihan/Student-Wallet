@@ -678,7 +678,47 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
 
     public void confirmChange(ActionEvent event)throws IOException{
-        System.out.println("hello");
+        String sql="SELECT ID, Password, Amount, Income FROM  Account;";
+        try{
+            rs=db.query(sql);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        String newPassword=changepword.getText();
+        String newAmount=changeamount.getText();
+        String newIncome=changeincome.getText();
+        if(!newPassword.equals("")){
+            String sql0="UPDATE Account SET Password='"+newPassword+"' WHERE ID='"+account.getAccountID()+"'";
+            try{
+                db.update(sql0);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        if(!newAmount.equals("")){
+            String sql0="UPDATE Account SET Amount='"+newAmount+"' WHERE ID='"+account.getAccountID()+"'";
+            try{
+                db.update(sql0);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        if(!newIncome.equals("")){
+            String sql0="UPDATE Account SET Income='"+newIncome+"' WHERE ID='"+account.getAccountID()+"'";
+            try{
+                db.update(sql0);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        Stage stage = (Stage) change.getScene().getWindow();
+        stage.close();
+
     }
 
       public void refresh(){
@@ -693,6 +733,10 @@ ObservableList data2= FXCollections.observableList(budgets);
             spends.setCellValueFactory(new PropertyValueFactory<Transaction,String>("currentSpent"));
         }
 
+        public void logout(){
+            Stage stage = (Stage) refresh.getScene().getWindow();
+            stage.close();
+        }
 
 
     @Override

@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/changeInfo.fxml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/AccountDisplay.fxml" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/AccountDisplay.fxml" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/Controller.class" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/Controller.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/database.db" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/database.db" />
       <change beforePath="$PROJECT_DIR$/src/AccountDisplay.fxml" afterPath="$PROJECT_DIR$/src/AccountDisplay.fxml" />
       <change beforePath="$PROJECT_DIR$/src/Controller.java" afterPath="$PROJECT_DIR$/src/Controller.java" />
-      <change beforePath="$PROJECT_DIR$/src/Database.db" afterPath="$PROJECT_DIR$/src/Database.db" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -75,8 +69,8 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="685" column="94" lean-forward="true" selection-start-line="685" selection-start-column="94" selection-end-line="685" selection-end-column="94" />
+            <state relative-caret-position="377">
+              <caret line="736" column="65" lean-forward="true" selection-start-line="736" selection-start-column="65" selection-end-line="736" selection-end-column="65" />
               <folding>
                 <element signature="e#3118#3126#0" expanded="true" />
               </folding>
@@ -178,6 +172,11 @@
         <option value="FxmlFile" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>cpi</find>
+    </findStrings>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -886,8 +885,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="685" column="94" lean-forward="true" selection-start-line="685" selection-start-column="94" selection-end-line="685" selection-end-column="94" />
+        <state relative-caret-position="377">
+          <caret line="736" column="65" lean-forward="true" selection-start-line="736" selection-start-column="65" selection-end-line="736" selection-end-column="65" />
           <folding>
             <element signature="e#3118#3126#0" expanded="true" />
           </folding>

@@ -174,6 +174,8 @@ TextField changeincome;
 Button cpi;
 @FXML
 Button change;
+@FXML
+Button refreshTable;
 
 SQLiteConnection db = SQLiteConnection.getInstance();
 ResultSet rs = null;
@@ -186,6 +188,9 @@ private static Budget deletedBudget;
 private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 ObservableList data= FXCollections.observableList(transactions);
 ObservableList data2= FXCollections.observableList(budgets);
+
+    private TableView transactionTableInst;
+    private Controller controllerInst;
 
     public void openRegister(ActionEvent event)throws Exception{
         Stage primaryStage = new Stage();
@@ -241,6 +246,7 @@ ObservableList data2= FXCollections.observableList(budgets);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("AccountDisplay.fxml"));
                         Parent root=loader.load();
                         Controller controller= loader.getController();
+                        this.controllerInst = controller;
                         transactions.removeAll(data);
                         budgets.removeAll(data2);
                         controller.displayTransaction();
@@ -253,6 +259,7 @@ ObservableList data2= FXCollections.observableList(budgets);
                         primaryStage.initModality(Modality.NONE);
                         primaryStage.initOwner(login.getScene().getWindow());
                         primaryStage.show();
+                        transactionTableInst = controller.TransactionTable;
                     }
                 }
                 if(!flag){
@@ -369,11 +376,16 @@ ObservableList data2= FXCollections.observableList(budgets);
         System.out.println(sql);
         try {
             db.update(sql);
+            data=FXCollections.observableList(transactions);
+            System.out.println(transactionTableInst);
+            transactionTableInst.setItems(data);
+            transactionTableInst.refresh();
+            System.out.println(controllerInst.TransactionTable);
+//            this.refresh();
         } catch (NullPointerException npe) {
             System.out.println("Well done");
         }
         searchBudgetOfCategory(transaction);
-
         //TransactionTable.refresh();
         //BudgetTable.refresh();
         Stage stage = (Stage) close.getScene().getWindow();
@@ -428,11 +440,13 @@ ObservableList data2= FXCollections.observableList(budgets);
         try{
             db.update(sql);
             transactions.remove(deletedTransaction);
+            data=FXCollections.observableList(transactions);
         }
         catch(Exception e){
             e.printStackTrace();
         }
-
+//        refreshTable.setVisible(false);
+  //      refreshTable.fire();
         Stage stage = (Stage) confirmDelete.getScene().getWindow();
         stage.close();
 
@@ -563,8 +577,14 @@ ObservableList data2= FXCollections.observableList(budgets);
                 System.out.println("Well done");
             }
           //  BudgetTable.refresh();
+            refreshTable.setVisible(false);
+            refreshTable.fire();
             Stage stage = (Stage) close2.getScene().getWindow();
             stage.close();
+        }
+        public void refreshTable(){
+            TransactionTable.refresh();
+            BudgetTable.refresh();
         }
         public void cancelBudget(ActionEvent event){
             Stage stage = (Stage) close2.getScene().getWindow();
@@ -678,13 +698,6 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
 
     public void confirmChange(ActionEvent event)throws IOException{
-        String sql="SELECT ID, Password, Amount, Income FROM  Account;";
-        try{
-            rs=db.query(sql);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
 
         String newPassword=changepword.getText();
         String newAmount=changeamount.getText();
@@ -720,6 +733,7 @@ ObservableList data2= FXCollections.observableList(budgets);
         stage.close();
 
     }
+
 
       public void refresh(){
             TransactionTable.setItems(data);

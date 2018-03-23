@@ -40,7 +40,7 @@
                         <VBox spacing="10.0">
                            <children>
                               <Label prefHeight="18.0" prefWidth="70.0" text="Transactions:" underline="true" />
-                              <TableView fx:id="TransactionTable" prefHeight="286.0" prefWidth="310.0">
+                              <TableView fx:id="TransactionTable" onSort="#refresh" prefHeight="286.0" prefWidth="310.0">
                                 <columns>
                                   <TableColumn fx:id="names" prefWidth="87.19997978210449" text="Name" />
                                   <TableColumn fx:id="amounts" prefWidth="87.19998931884766" text="Amount" />
@@ -63,7 +63,12 @@
                                     <Insets />
                                  </VBox.margin>
                               </Label>
-                              <Button mnemonicParsing="false" text="Display Expenditure Graph" />
+                              <HBox>
+                                 <children>
+                                    <Button mnemonicParsing="false" text="Display Expenditure Graph" />
+                                    <Button fx:id="refreshTable" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
+                                 </children>
+                              </HBox>
                               <Label text="Budgets:" underline="true" />
                               <TableView fx:id="BudgetTable" prefHeight="161.0" prefWidth="333.0">
                                 <columns>

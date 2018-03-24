@@ -176,9 +176,9 @@ Button cpi;
 Button change;
 @FXML
 Button refreshTable;
+@FXML
+Button close4;
 
-SQLiteConnection db = SQLiteConnection.getInstance();
-ResultSet rs = null;
 private static Account account;
 private static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
 private static Transaction transaction;
@@ -188,7 +188,7 @@ private static Budget deletedBudget;
 private static ArrayList<Budget> budgets= new ArrayList<Budget>();
 ObservableList data= FXCollections.observableList(transactions);
 ObservableList data2= FXCollections.observableList(budgets);
-
+Admin admin=Admin.getInstance();
     private TableView transactionTableInst;
     private Controller controllerInst;
 
@@ -203,45 +203,17 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
 
     public void register(ActionEvent event) throws Exception{
-        boolean flag=false;
-        String sql0="SELECT Username FROM Account";
-        try{
-            rs=db.query(sql0);
-            while(rs.next()){
-                if(username2.getText().equals(rs.getString("Username"))){
-                    System.out.println("Fuck off");
-                    exists.setText("Username already exists");
-                    flag=true;
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        if(!flag) {
-            String sql = "INSERT INTO Account (Firstname,Lastname,Username,Password,Amount,Income) " + "VALUES('" + firstname.getText() + "','" + secondname.getText() + "','" + username2.getText() + "','" + password2.getText() + "'," + amount.getText() + "," + income.getText() + ");";
-            System.out.println(sql);
-            try {
-                db.update(sql);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        boolean flag=admin.addAccount(firstname.getText(),secondname.getText(),username2.getText(),password2.getText(),amount.getText(),income.getText());
+        if(flag) exists.setText("Username already exists");
             Stage stage = (Stage) register.getScene().getWindow();
             stage.close();
         }
-    }
+
     public void login(ActionEvent event) throws Exception{
-            String sql = "SELECT  ID, Firstname, Lastname, Username, Password, Amount, Income  FROM Account";
-            try {
-                rs = db.query(sql);
-                String user = username.getText();
-                String pword = password.getText();
-                boolean flag=false;
-                while (rs.next()) {
-                    if (rs.getString("Username").equals(user) && rs.getString("Password").equals(pword)){
-                        flag=true;
+        account=admin.searchAccount(username.getText(),password.getText());
+                    if(account!=null){
                         loginFail.setText("");
-                        account=new Account(rs.getInt("ID"),rs.getString("Firstname"),rs.getString("Lastname"),rs.getString("Username"),rs.getString("Password"),rs.getInt("Amount"),rs.getInt("Income"));
+                        account=admin.searchAccount(username.getText(),password.getText());
                         Stage primaryStage = new Stage();
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("AccountDisplay.fxml"));
                         Parent root=loader.load();
@@ -261,17 +233,12 @@ ObservableList data2= FXCollections.observableList(budgets);
                         primaryStage.show();
                         transactionTableInst = controller.TransactionTable;
                     }
-                }
-                if(!flag){
-                    loginFail.setText("Incorrect credentials");
-                    loginFail.setTextFill(Color.valueOf("red"));
-                }
+                    else{
+                        loginFail.setText("Incorrect credentials");
+                        loginFail.setTextFill(Color.valueOf("red"));
+                    }
 
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-    }
 
     public void opendeleteAccount() throws IOException{
         Stage primaryStage = new Stage();
@@ -284,11 +251,9 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
 
     public void confirmDeleteAccount(){
-        String sql="DELETE FROM Account WHERE ID='"+account.getAccountID()+"';";
-        try{ db.update(sql);}
-        catch(Exception e){e.printStackTrace();}
-        //Stage stage= (Stage) deleteAccount.getScene().getWindow();
-        //stage.close();
+        admin.deleteAccount(account);
+        Stage stage= (Stage) close4.getScene().getWindow();
+        stage.close();
     }
 
     public void cancelDeleteAccount(){
@@ -332,30 +297,23 @@ ObservableList data2= FXCollections.observableList(budgets);
             }
     }
     public void inputTransaction(ActionEvent event) throws IOException{
-        String date=transDate.getConverter().toString(transDate.getValue());
-        System.out.println(transDate.getValue());
-        String[] dateStuff=date.split("/");
-        System.out.println(dateStuff[0]+ dateStuff[1] + dateStuff[2]);
-        java.sql.Date date1= new java.sql.Date(Integer.parseInt(dateStuff[2]),Integer.parseInt(dateStuff[1]), Integer.parseInt(dateStuff[0]));
+        Date date = Date.valueOf(transDate.getValue());
 
-        Date date2 = Date.valueOf(transDate.getValue());
-        System.out.println(date2);
         if (transType.getText().equals("Transport")) {
-            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Transport);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Transport);
         } else if (transType.getText().equals("Food")) {
-            transaction= new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Food);
+            transaction= new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Food);
         } else if (transType.getText().equals("Accomodation")) {
-            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Accomodation);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Accomodation);
         } else if (transType.getText().equals("Leisure")) {
-            transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Leisure);
+            transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Leisure);
         } else if (transType.getText().equals("Debt")) {
-            transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Debt);
+            transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Debt);
         } else if (transType.getText().equals("Savings")) {
-            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Savings);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Savings);
         } else if (transType.getText().equals("Other") ) {
-            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date2, TransactionType.Other);
+            transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Other);
         }
-        System.out.println(transaction.getTransactionName());
 
         Stage stage = (Stage) confirmTrans.getScene().getWindow();
         stage.close();
@@ -372,22 +330,10 @@ ObservableList data2= FXCollections.observableList(budgets);
     }
     public void confirmTransaction(ActionEvent event)throws SQLException {
         transactions.add(transaction);
-        String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate().toString()+"');";
-        System.out.println(sql);
-        try {
-            db.update(sql);
-            data=FXCollections.observableList(transactions);
-            System.out.println(transactionTableInst);
-            transactionTableInst.setItems(data);
-            transactionTableInst.refresh();
-            System.out.println(controllerInst.TransactionTable);
-//            this.refresh();
-        } catch (NullPointerException npe) {
-            System.out.println("Well done");
-        }
+        admin.addTransaction(account,transactions);
+        data=FXCollections.observableList(transactions);
         searchBudgetOfCategory(transaction);
-        //TransactionTable.refresh();
-        //BudgetTable.refresh();
+
         Stage stage = (Stage) close.getScene().getWindow();
         stage.close();
 
@@ -436,51 +382,16 @@ ObservableList data2= FXCollections.observableList(budgets);
         primaryStage.show();
     }
     public void deleteTransaction(){
-        String sql="DELETE FROM Transactions WHERE ID='"+deletedTransaction.getTransactionID()+"';";
-        try{
-            db.update(sql);
-            transactions.remove(deletedTransaction);
-            data=FXCollections.observableList(transactions);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-//        refreshTable.setVisible(false);
-  //      refreshTable.fire();
+        admin.deleteTransaction(deletedTransaction);
+        transactions.remove(deletedTransaction);
+        data=FXCollections.observableList(transactions);
         Stage stage = (Stage) confirmDelete.getScene().getWindow();
         stage.close();
 
     }
 
     public void displayTransaction(){
-            String sql = "SELECT ID, AccountID, Amount, Name, Category, Date FROM Transactions";
-
-            try {
-                rs = db.query(sql);
-                while (rs.next()) {
-                    if(rs.getInt("AccountID") == account.getAccountID()) {
-                        java.util.Date date=new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("Date"));
-                        if (rs.getString("Category").equals("Transport")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Transport));
-                        } else if (rs.getString("Category").equals("Food")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Food));
-                        } else if (rs.getString("Category").equals("Accomodation")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Accomodation));
-                        } else if (rs.getString("Category").equals("Leisure")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Leisure));
-                        } else if (rs.getString("Category").equals("Debt")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Debt));
-                        } else if (rs.getString("Category").equals("Savings")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Savings));
-                        } else if (rs.getString("Category").equals("Other")) {
-                            transactions.add(new Transaction(rs.getInt("ID"), rs.getInt("AccountID"), rs.getString("Name"), rs.getInt("Amount"), date, TransactionType.Other));
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            admin.getTransactions(account,transactions);
         }
 
         public void addBudget(ActionEvent event)throws IOException{
@@ -538,21 +449,9 @@ ObservableList data2= FXCollections.observableList(budgets);
                 budget=new Budget(budgets.size(),account.getAccountID(),0,Double.parseDouble(budgetLimit.getText()), TransactionType.Other);
             }
             System.out.println(budget.getBudgetID());
-            boolean flag=false;
-            String sql="SELECT AccountID, Category FROM Budgets";
-            try{
-                rs=db.query(sql);
-                while(rs.next()){
-                    if(account.getAccountID()==rs.getInt("AccountID") && budget.getCategoryForBudget().toString().equals(rs.getString("Category"))){
-                        System.out.println("Fuck off");
-                        flag=true;
-                        budgetExists.setText("You already have a budget for this category");
-                    }
-                }
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
+
+            boolean flag=admin.checkBudget(account,budget);
+
             if(!flag) {
                 Stage stage = (Stage) addBudget.getScene().getWindow();
                 stage.close();
@@ -566,19 +465,12 @@ ObservableList data2= FXCollections.observableList(budgets);
                 primaryStage.initOwner(addBudget.getScene().getWindow());
                 primaryStage.show();
             }
+            else budgetExists.setText("You already have a budget for this category");
         }
         public void confirmBudget(ActionEvent event){
             budgets.add(budget);
-            String sql = "INSERT INTO Budgets ( AccountID, CurrentSpent, SpendingLimit , Name, Category) " + "VALUES('" + account.getAccountID() + "','" + budgets.get(budgets.size() - 1).getCurrentSpent()+ "','" + budgets.get(budgets.size() - 1).getSpendingLimit()+ "','lool','" + budgets.get(budgets.size() - 1).getCategoryForBudget().toString() + "');";
-            System.out.println(sql);
-            try {
-                 db.update(sql);
-            } catch (NullPointerException npe) {
-                System.out.println("Well done");
-            }
-          //  BudgetTable.refresh();
-            refreshTable.setVisible(false);
-            refreshTable.fire();
+            admin.addBudget(account,budgets);
+
             Stage stage = (Stage) close2.getScene().getWindow();
             stage.close();
         }
@@ -591,33 +483,7 @@ ObservableList data2= FXCollections.observableList(budgets);
             stage.close();
         }
     public void displayBudgets(){
-        String sql = "SELECT ID, AccountID, CurrentSpent, SpendingLimit, Category FROM Budgets";
-
-        try {
-            rs = db.query(sql);
-            while (rs.next()) {
-                if(rs.getInt("AccountID") == account.getAccountID()) {
-                    if (rs.getString("Category").equals("Transport")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Transport));
-                    } else if (rs.getString("Category").equals("Food")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Food));
-                    } else if (rs.getString("Category").equals("Accomodation")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Accomodation));
-                    } else if (rs.getString("Category").equals("Leisure")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"), rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Leisure));
-                    } else if (rs.getString("Category").equals("Debt")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Debt));
-                    } else if (rs.getString("Category").equals("Savings")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Savings));
-                    } else if (rs.getString("Category").equals("Other")) {
-                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Other));
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        admin.getBudgets( account, budgets );
     }
     public void openBudgetDelete()throws IOException{
         Stage primaryStage = new Stage();
@@ -657,15 +523,8 @@ ObservableList data2= FXCollections.observableList(budgets);
         primaryStage.show();
     }
     public void deleteBudget(){
-        String sql="DELETE FROM Budgets WHERE ID='"+deletedBudget.getBudgetID()+"';";
-        try{
-            db.update(sql);
-            budgets.remove(deletedBudget);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
+        admin.deleteBudget(deletedBudget);
+        budgets.remove(deletedBudget);
         Stage stage = (Stage) confirmBudgetDelete.getScene().getWindow();
         stage.close();
 
@@ -675,10 +534,7 @@ ObservableList data2= FXCollections.observableList(budgets);
             for (int i = 0; i < budgets.size(); i++) {
                 if (budgets.get(i).getCategoryForBudget() == transaction.getCategoryOfTransaction()) {
                     budgets.get(i).setCurrentSpend(transaction.getTransactionAmount());
-                    String sql = " UPDATE Budgets SET CurrentSpent='" + budgets.get(i).getCurrentSpent() + "' WHERE ID='" + budgets.get(i).getBudgetID() + "' AND AccountID='" + account.getAccountID() + "';";
-                    System.out.println(sql);
-
-                    db.update(sql);
+                    admin.updateBudget(account, budgets.get(i));
 
                 }
             }
@@ -702,33 +558,7 @@ ObservableList data2= FXCollections.observableList(budgets);
         String newPassword=changepword.getText();
         String newAmount=changeamount.getText();
         String newIncome=changeincome.getText();
-        if(!newPassword.equals("")){
-            String sql0="UPDATE Account SET Password='"+newPassword+"' WHERE ID='"+account.getAccountID()+"'";
-            try{
-                db.update(sql0);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        if(!newAmount.equals("")){
-            String sql0="UPDATE Account SET Amount='"+newAmount+"' WHERE ID='"+account.getAccountID()+"'";
-            try{
-                db.update(sql0);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        if(!newIncome.equals("")){
-            String sql0="UPDATE Account SET Income='"+newIncome+"' WHERE ID='"+account.getAccountID()+"'";
-            try{
-                db.update(sql0);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }
+        admin.updateAccount(account,newPassword,newAmount,newIncome);
         Stage stage = (Stage) change.getScene().getWindow();
         stage.close();
 

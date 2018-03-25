@@ -1,4 +1,5 @@
 public enum TransactionType {
+    General,
     Transport,
     Food,
     Accomodation,

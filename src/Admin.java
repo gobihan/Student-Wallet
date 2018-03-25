@@ -1,6 +1,8 @@
 import java.sql.ResultSet;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Admin {
 private ResultSet rs;
@@ -14,17 +16,21 @@ private SQLiteConnection db;
     private static final Admin INSTANCE = new Admin();
     public static Admin getInstance() { return INSTANCE;}
 
-    /**
-     *
-     * @param
-     */
     public Account searchAccount(String username, String password) {
-        String sql = "SELECT  ID, Firstname, Lastname, Username, Password, Amount, Income  FROM Account";
+        DateFormat dateFormat = new SimpleDateFormat("dd");
+        Date date1 = new Date();
+       // System.out.println(dateFormat.format(date1));
+    Account account=null;
+        String sql = "SELECT  ID, Firstname, Lastname, Username, Password, Amount, Income, Date FROM Account";
         try {
             rs = db.query(sql);
             while (rs.next()) {
                 if (rs.getString("Username").equals(username) && rs.getString("Password").equals(password)) {
-                    return new Account(rs.getInt("ID"),rs.getString("Firstname"),rs.getString("Lastname"),rs.getString("Username"),rs.getString("Password"),rs.getInt("Amount"),rs.getInt("Income"));
+                    java.util.Date date=new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("Date"));
+//                    if(dateFormat.format(date).equals(dateFormat.format(date1))) {
+//                         account = new Account(rs.getInt("ID"), rs.getString("Firstname"), rs.getString("Lastname"), rs.getString("Username"), rs.getString("Password"), rs.getInt("Amount")+rs.getInt("Income"), rs.getInt("Income"), date);
+//                    }
+                     account = new Account(rs.getInt("ID"), rs.getString("Firstname"), rs.getString("Lastname"), rs.getString("Username"), rs.getString("Password"), rs.getInt("Amount"), rs.getInt("Income"), date);
 
                 }
             }
@@ -33,13 +39,9 @@ private SQLiteConnection db;
             e.printStackTrace();
         }
 
-        return null;
+        return account;
     }
 
-    /**
-     *
-     * @param
-     */
     public boolean addAccount(String firstname, String secondname, String username, String password, String amount, String income) {
         boolean flag=false;
         String sql0 = "SELECT Username FROM Account";
@@ -55,7 +57,10 @@ private SQLiteConnection db;
             e.printStackTrace();
         }
         if (!flag) {
-            String sql = "INSERT INTO Account (Firstname,Lastname,Username,Password,Amount,Income) " + "VALUES('" + firstname + "','" + secondname + "','" + username + "','" + password + "'," + amount + "," + income + ");";
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            System.out.println(dateFormat.format(date));
+            String sql = "INSERT INTO Account (Firstname,Lastname,Username,Password,Amount,Income, Date) " + "VALUES('" + firstname + "','" + secondname + "','" + username + "','" + password + "'," + amount + "," + income + ",'"+dateFormat.format(date)+"');";
             System.out.println(sql);
             try {
                 db.update(sql);
@@ -230,6 +235,9 @@ private SQLiteConnection db;
                         budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Savings));
                     } else if (rs.getString("Category").equals("Other")) {
                         budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.Other));
+                    }
+                    else if (rs.getString("Category").equals("General")) {
+                        budgets.add(new Budget(rs.getInt("ID"), rs.getInt("AccountID"),  rs.getInt("CurrentSpent"), rs.getInt("SpendingLimit"), TransactionType.General));
                     }
                 }
             }

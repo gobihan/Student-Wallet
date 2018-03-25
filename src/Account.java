@@ -9,6 +9,8 @@ public class Account {
     private int accountID;
     private int accountAmount;
     private double income;
+    private Date date;
+
 
     /**
      *
@@ -16,7 +18,7 @@ public class Account {
      * @param amount
      * @param income
      */
-    public Account(int ID,String fname, String sname, String uname, String pword,int amount, double income) {
+    public Account(int ID,String fname, String sname, String uname, String pword,int amount, double income, Date date) {
         accountID=ID;
         accountAmount=amount;
         firstName=fname;
@@ -24,6 +26,7 @@ public class Account {
         userName=uname;
         password=pword;
         this.income=income;
+        this.date=date;
     }
 
     /**
@@ -189,6 +192,9 @@ public class Account {
 
     public double getIncome() {
         return this.income;
+    }
+    public Date getDate() {
+        return this.date;
     }
 
     public void showExpenditureGraphs() {

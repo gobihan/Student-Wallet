@@ -7,7 +7,7 @@ public class Account {
     private String userName;
     private String password;
     private int accountID;
-    private int accountAmount;
+    private double accountAmount;
     private double income;
     private Date date;
 
@@ -18,7 +18,7 @@ public class Account {
      * @param amount
      * @param income
      */
-    public Account(int ID,String fname, String sname, String uname, String pword,int amount, double income, Date date) {
+    public Account(int ID,String fname, String sname, String uname, String pword,double amount, double income, Date date) {
         accountID=ID;
         accountAmount=amount;
         firstName=fname;
@@ -41,11 +41,14 @@ public class Account {
        return this.accountID;
     }
 
-    public int getAccountAmount() {
+    public double getAccountAmount() {
         return this.accountAmount;
     }
     public void setAmount(double transaction){
         this.accountAmount=this.accountAmount - (int) transaction;
+    }
+    public void increaseAmount(double transaction){
+        this.accountAmount=this.accountAmount+ (int) transaction;
     }
     public void setIncome(double income){
         this.income=income;

@@ -15,22 +15,13 @@ public class Transaction {
      * @param amount
      * @param category
      */
-    public Transaction(int ID, int accountID, String name,int amount, Date date, TransactionType category) {
+    public Transaction(int ID, int accountID, String name,double amount, Date date, TransactionType category) {
         transactionID=ID;
         this.accountID=accountID;
         transactionName=name;
         transactionDate = date;
         transactionAmount=amount;
         categoryOfTransaction=category;
-    }
-    public boolean confirmTransaction() {
-        // TODO - implement Transaction.confirmTransaction
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean confirmDelete() {
-        // TODO - implement Transaction.confirmDelete
-        throw new UnsupportedOperationException();
     }
 
     public int getTransactionID() {

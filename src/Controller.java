@@ -314,19 +314,19 @@
             Date date = Date.valueOf(transDate.getValue());
 
             if (transType.getText().equals("Transport")) {
-                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Transport);
+                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Transport);
             } else if (transType.getText().equals("Food")) {
-                transaction= new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Food);
+                transaction= new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Food);
             } else if (transType.getText().equals("Accomodation")) {
-                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Accomodation);
+                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Accomodation);
             } else if (transType.getText().equals("Leisure")) {
-                transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Leisure);
+                transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Leisure);
             } else if (transType.getText().equals("Debt")) {
-                transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Debt);
+                transaction=new  Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Debt);
             } else if (transType.getText().equals("Savings")) {
-                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Savings);
+                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Savings);
             } else if (transType.getText().equals("Other") ) {
-                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Integer.parseInt(transAmount.getText()),date, TransactionType.Other);
+                transaction=new Transaction(transactions.size(),account.getAccountID(),transName.getText(),Double.parseDouble(transAmount.getText()),date, TransactionType.Other);
             }
 
             Stage stage = (Stage) confirmTrans.getScene().getWindow();
@@ -583,9 +583,10 @@
             String newPassword=changepword.getText();
             String newAmount=changeamount.getText();
             String newIncome=changeincome.getText();
-            account.setIncome(Double.parseDouble(newIncome));
-            account.setAmount(Double.parseDouble(newAmount));
-            admin.updateAccount(account,newPassword,newAmount,newIncome);
+            if(!newIncome.equals("")) account.setIncome(Double.parseDouble(newIncome));
+            if(!newAmount.equals("")) account.increaseAmount(Double.parseDouble(newAmount));
+            String amount=""+account.getAccountAmount();
+            admin.updateAccount(account,newPassword,amount,newIncome);
             Stage stage = (Stage) change.getScene().getWindow();
             stage.close();
 

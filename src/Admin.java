@@ -1,6 +1,9 @@
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,20 +20,24 @@ private SQLiteConnection db;
     public static Admin getInstance() { return INSTANCE;}
 
     public Account searchAccount(String username, String password) {
-        DateFormat dateFormat = new SimpleDateFormat("dd");
-        Date date1 = new Date();
-       // System.out.println(dateFormat.format(date1));
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date date1 = new Date();
+        LocalDate date = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+       //System.out.println(dateFormat.format(date1));
     Account account=null;
         String sql = "SELECT  ID, Firstname, Lastname, Username, Password, Amount, Income, Date FROM Account";
         try {
             rs = db.query(sql);
             while (rs.next()) {
                 if (rs.getString("Username").equals(username) && rs.getString("Password").equals(password)) {
-                    java.util.Date date=new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("Date"));
-//                    if(dateFormat.format(date).equals(dateFormat.format(date1))) {
-//                         account = new Account(rs.getInt("ID"), rs.getString("Firstname"), rs.getString("Lastname"), rs.getString("Username"), rs.getString("Password"), rs.getInt("Amount")+rs.getInt("Income"), rs.getInt("Income"), date);
-//                    }
-                     account = new Account(rs.getInt("ID"), rs.getString("Firstname"), rs.getString("Lastname"), rs.getString("Username"), rs.getString("Password"), rs.getInt("Amount"), rs.getInt("Income"), date);
+                    java.util.Date date2=new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString("Date"));
+                    LocalDate date3 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    Period p= Period.between(date,date3);
+                    int diff=p.getMonths();
+                   if(diff == 1) {
+                        account = new Account(rs.getInt("ID"), rs.getString("Firstname"), rs.getString("Lastname"), rs.getString("Username"), rs.getString("Password"), rs.getInt("Amount")+rs.getInt("Income"), rs.getInt("Income"), date1);
+             }
+                     account = new Account(rs.getInt("ID"), rs.getString("Firstname"), rs.getString("Lastname"), rs.getString("Username"), rs.getString("Password"), rs.getInt("Amount"), rs.getInt("Income"), date2);
 
                 }
             }

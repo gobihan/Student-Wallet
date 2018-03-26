@@ -90,6 +90,7 @@ private SQLiteConnection db;
             String sql0="UPDATE Account SET Password='"+newPassword+"' WHERE ID='"+account.getAccountID()+"'";
             try{
                 db.update(sql0);
+                //account.setPassword(newPassword);
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -99,6 +100,7 @@ private SQLiteConnection db;
             String sql0="UPDATE Account SET Amount='"+newAmount+"' WHERE ID='"+account.getAccountID()+"'";
             try{
                 db.update(sql0);
+                //account.setAmount(Double.parseDouble(newAmount));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -108,6 +110,7 @@ private SQLiteConnection db;
             String sql0="UPDATE Account SET Income='"+newIncome+"' WHERE ID='"+account.getAccountID()+"'";
             try{
                 db.update(sql0);
+               // account.setIncome(Double.parseDouble(newIncome));
             }
             catch(Exception e){
                 e.printStackTrace();

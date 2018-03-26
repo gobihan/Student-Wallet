@@ -65,7 +65,7 @@
                               </Label>
                               <HBox>
                                  <children>
-                                    <Button mnemonicParsing="false" text="Display Expenditure Graph" />
+                                    <Button fx:id="graphs" mnemonicParsing="false" onAction="#graph" text="Display Expenditure Graph" />
                                     <Button fx:id="refreshTable" mnemonicParsing="false" onAction="#refreshTable" text="Refresh" />
                                  </children>
                               </HBox>

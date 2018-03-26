@@ -8,8 +8,10 @@
     import javafx.fxml.Initializable;
     import javafx.scene.Parent;
     import javafx.scene.Scene;
+    import javafx.scene.chart.*;
     import javafx.scene.control.*;
     import javafx.scene.control.cell.PropertyValueFactory;
+    import javafx.scene.layout.VBox;
     import javafx.scene.paint.Color;
     import javafx.stage.Modality;
     import javafx.stage.Stage;
@@ -178,6 +180,15 @@
     Button refreshTable;
     @FXML
     Button close4;
+    @FXML
+    Button graphs;
+    @FXML
+    BarChart barchart;
+    @FXML
+    Axis xAxis;
+    @FXML
+    Axis yAxis;
+
 
     private static Account account;
     private static ArrayList<Transaction> transactions= new ArrayList<Transaction>();
@@ -333,6 +344,9 @@
         public void confirmTransaction(ActionEvent event)throws SQLException {
             transactions.add(transaction);
             admin.addTransaction(account,transactions);
+            String updatedAccount=""+(account.getAccountAmount()-transaction.getTransactionAmount())+"";
+            admin.updateAccount(account,"",updatedAccount,"");
+            account.setAmount(transaction.getTransactionAmount());
             data=FXCollections.observableList(transactions);
             searchBudgetOfCategory(transaction);
 
@@ -568,9 +582,101 @@
             String newPassword=changepword.getText();
             String newAmount=changeamount.getText();
             String newIncome=changeincome.getText();
+            account.setIncome(Double.parseDouble(newIncome));
+            account.setAmount(Double.parseDouble(newAmount));
             admin.updateAccount(account,newPassword,newAmount,newIncome);
             Stage stage = (Stage) change.getScene().getWindow();
             stage.close();
+
+        }
+
+        public void graph()throws IOException{
+
+            Stage primaryStage = new Stage();
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("graphs.fxml"));
+//            Parent root=loader.load();
+//            primaryStage.setTitle("Stock GUI");
+//            primaryStage.setScene(new Scene(root));
+//            primaryStage.initModality(Modality.NONE);
+//            primaryStage.initOwner(graphs.getScene().getWindow());
+//            primaryStage.show();
+
+//            xAxis.setLabel("Devices");
+//            yAxis.setLabel("Visits");
+
+//
+
+            double accomodation=0.0;
+            double food=0.0;
+            double transport=0.0;
+            double leisure=0.0;
+            double debt=0.0;
+            double savings=0.0;
+            double other=0.0;
+
+            for(int i=0; i<transactions.size(); i++) {
+
+                if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Accomodation) {
+                    accomodation = accomodation + transactions.get(i).getTransactionAmount();
+                } else if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Food) {
+                    food = food + transactions.get(i).getTransactionAmount();
+                } else if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Transport) {
+                    transport = transport + transactions.get(i).getTransactionAmount();
+                } else if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Leisure) {
+                    leisure = leisure + transactions.get(i).getTransactionAmount();
+                } else if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Debt) {
+                    debt = debt + transactions.get(i).getTransactionAmount();
+                } else if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Savings) {
+                    savings = savings + transactions.get(i).getTransactionAmount();
+                } else if (transactions.get(i).getCategoryOfTransaction() == TransactionType.Other) {
+                    other = other + transactions.get(i).getTransactionAmount();
+                }
+            }
+            CategoryAxis xAxis = new CategoryAxis();
+            xAxis.setLabel("Transaction Types");
+
+            NumberAxis yAxis = new NumberAxis();
+            yAxis.setLabel("Amount Spent");
+
+            // Create a BarChart
+            BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis, yAxis);
+            // Series 1 - Data of 2014
+            XYChart.Series<String, Number> dataSeries1 = new XYChart.Series<String, Number>();
+
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Accomodation", accomodation));
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Food", food));
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Transport", transport));
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Leisure", leisure));
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Debt", debt));
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Savings", savings));
+            dataSeries1.getData().add(new XYChart.Data<String, Number>("Other", other));
+            barChart.setLegendVisible(false);
+
+
+//            // Series 2 - Data of 2015
+//            XYChart.Series<String, Number> dataSeries2 = new XYChart.Series<String, Number>();
+//            dataSeries2.setName("2015");
+//
+//            dataSeries2.getData().add(new XYChart.Data<String, Number>("Java", 26.983));
+//            dataSeries2.getData().add(new XYChart.Data<String, Number>("C#", 6.569));
+//            dataSeries2.getData().add(new XYChart.Data<String, Number>("PHP", 6.619));
+
+            // Add Series to BarChart.
+            barChart.getData().add(dataSeries1);
+            //barChart.getData().add(dataSeries2);
+
+            barChart.setTitle("Transactions");
+
+            VBox vbox = new VBox(barChart);
+
+            primaryStage.setTitle("Transaction graphs");
+            Scene scene = new Scene(vbox, 400, 200);
+
+            primaryStage.setScene(scene);
+            primaryStage.setHeight(300);
+            primaryStage.setWidth(400);
+
+            primaryStage.show();
 
         }
 

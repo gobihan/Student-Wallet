@@ -593,19 +593,6 @@
         public void graph()throws IOException{
 
             Stage primaryStage = new Stage();
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("graphs.fxml"));
-//            Parent root=loader.load();
-//            primaryStage.setTitle("Stock GUI");
-//            primaryStage.setScene(new Scene(root));
-//            primaryStage.initModality(Modality.NONE);
-//            primaryStage.initOwner(graphs.getScene().getWindow());
-//            primaryStage.show();
-
-//            xAxis.setLabel("Devices");
-//            yAxis.setLabel("Visits");
-
-//
-
             double accomodation=0.0;
             double food=0.0;
             double transport=0.0;
@@ -651,15 +638,6 @@
             dataSeries1.getData().add(new XYChart.Data<String, Number>("Savings", savings));
             dataSeries1.getData().add(new XYChart.Data<String, Number>("Other", other));
             barChart.setLegendVisible(false);
-
-
-//            // Series 2 - Data of 2015
-//            XYChart.Series<String, Number> dataSeries2 = new XYChart.Series<String, Number>();
-//            dataSeries2.setName("2015");
-//
-//            dataSeries2.getData().add(new XYChart.Data<String, Number>("Java", 26.983));
-//            dataSeries2.getData().add(new XYChart.Data<String, Number>("C#", 6.569));
-//            dataSeries2.getData().add(new XYChart.Data<String, Number>("PHP", 6.619));
 
             // Add Series to BarChart.
             barChart.getData().add(dataSeries1);

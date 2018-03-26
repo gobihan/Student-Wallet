@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/graphs.fxml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/Account.class" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/Account.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/Admin.class" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/Admin.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/Controller.class" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/Controller.class" />
-      <change beforePath="$PROJECT_DIR$/out/production/Student-Wallet2/database.db" afterPath="$PROJECT_DIR$/out/production/Student-Wallet2/database.db" />
-      <change beforePath="$PROJECT_DIR$/src/Account.java" afterPath="$PROJECT_DIR$/src/Account.java" />
-      <change beforePath="$PROJECT_DIR$/src/AccountDisplay.fxml" afterPath="$PROJECT_DIR$/src/AccountDisplay.fxml" />
-      <change beforePath="$PROJECT_DIR$/src/Admin.java" afterPath="$PROJECT_DIR$/src/Admin.java" />
-      <change beforePath="$PROJECT_DIR$/src/Budget.java" afterPath="$PROJECT_DIR$/src/Budget.java" />
       <change beforePath="$PROJECT_DIR$/src/Controller.java" afterPath="$PROJECT_DIR$/src/Controller.java" />
-      <change beforePath="$PROJECT_DIR$/src/Database.db" afterPath="$PROJECT_DIR$/src/Database.db" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -89,16 +78,16 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="663" column="38" lean-forward="true" selection-start-line="663" selection-start-column="38" selection-end-line="663" selection-end-column="38" />
+            <state relative-caret-position="243">
+              <caret line="598" column="25" lean-forward="false" selection-start-line="598" selection-start-column="25" selection-end-line="598" selection-end-column="25" />
               <folding>
                 <element signature="e#3995#4003#0" expanded="true" />
                 <element signature="e#15130#15131#0" expanded="true" />
                 <element signature="e#15205#15206#0" expanded="true" />
                 <element signature="e#20884#20885#0" expanded="true" />
                 <element signature="e#20944#20945#0" expanded="true" />
-                <element signature="e#27002#27018#0" expanded="true" />
-                <element signature="e#27148#27164#0" expanded="true" />
+                <element signature="e#26521#26537#0" expanded="true" />
+                <element signature="e#26667#26683#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -145,19 +134,6 @@
                 <element signature="e#853#854#0" expanded="true" />
                 <element signature="e#898#899#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="graphs.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/graphs.fxml">
-          <provider editor-type-id="JavaFX-Scene-Builder">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -891,16 +867,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="663" column="38" lean-forward="true" selection-start-line="663" selection-start-column="38" selection-end-line="663" selection-end-column="38" />
+        <state relative-caret-position="243">
+          <caret line="598" column="25" lean-forward="false" selection-start-line="598" selection-start-column="25" selection-end-line="598" selection-end-column="25" />
           <folding>
             <element signature="e#3995#4003#0" expanded="true" />
             <element signature="e#15130#15131#0" expanded="true" />
             <element signature="e#15205#15206#0" expanded="true" />
             <element signature="e#20884#20885#0" expanded="true" />
             <element signature="e#20944#20945#0" expanded="true" />
-            <element signature="e#27002#27018#0" expanded="true" />
-            <element signature="e#27148#27164#0" expanded="true" />
+            <element signature="e#26521#26537#0" expanded="true" />
+            <element signature="e#26667#26683#0" expanded="true" />
           </folding>
         </state>
       </provider>

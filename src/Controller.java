@@ -11,6 +11,7 @@
     import javafx.scene.chart.*;
     import javafx.scene.control.*;
     import javafx.scene.control.cell.PropertyValueFactory;
+    import javafx.scene.layout.HBox;
     import javafx.scene.layout.VBox;
     import javafx.scene.paint.Color;
     import javafx.stage.Modality;
@@ -644,15 +645,24 @@
             //barChart.getData().add(dataSeries2);
 
             barChart.setTitle("Transactions");
-
-            VBox vbox = new VBox(barChart);
+            ObservableList<PieChart.Data> pieChartData =
+                    FXCollections.observableArrayList(
+                            new PieChart.Data("Accomodation", accomodation),
+                            new PieChart.Data("Food", food),
+                            new PieChart.Data("Transport", transport),
+                            new PieChart.Data("Leisure", leisure),
+                            new PieChart.Data("Debt", debt),
+                            new PieChart.Data("Savings", savings),
+                            new PieChart.Data("Other", other));
+            final PieChart chart = new PieChart(pieChartData);
+            chart.setLegendVisible(false);
+            HBox hbox = new HBox(barChart, chart);
 
             primaryStage.setTitle("Transaction graphs");
-            Scene scene = new Scene(vbox, 400, 200);
+
+            Scene scene = new Scene(hbox);
 
             primaryStage.setScene(scene);
-            primaryStage.setHeight(300);
-            primaryStage.setWidth(400);
 
             primaryStage.show();
 

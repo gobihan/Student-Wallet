@@ -9,12 +9,6 @@ public class Transaction {
     private TransactionType categoryOfTransaction;
     private int accountID;
 
-    /**
-     *
-     * @param ID
-     * @param amount
-     * @param category
-     */
     public Transaction(int ID, int accountID, String name,double amount, Date date, TransactionType category) {
         transactionID=ID;
         this.accountID=accountID;

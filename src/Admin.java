@@ -78,20 +78,12 @@ private SQLiteConnection db;
         return flag;
     }
 
-    /**
-     *
-     * @param account
-     */
     public void deleteAccount(Account account) {
         String sql="DELETE FROM Account WHERE ID='"+account.getAccountID()+"';";
         try{ db.update(sql);}
         catch(Exception e){e.printStackTrace();}
     }
 
-    /**
-     *
-     * @param account
-     */
     public void updateAccount(Account account, String newPassword, String newAmount, String newIncome) {
         if(!newPassword.equals("")){
             String sql0="UPDATE Account SET Password='"+newPassword+"' WHERE ID='"+account.getAccountID()+"'";
@@ -125,10 +117,6 @@ private SQLiteConnection db;
         }
     }
 
-    /**
-     *
-     * @param
-     */
     public void addTransaction(Account account, ArrayList<Transaction> transactions) {
         String sql = "INSERT INTO Transactions ( AccountID, Amount , Name, Category, Date) " + "VALUES('" + account.getAccountID() + "','" + transactions.get(transactions.size() - 1).getTransactionAmount() + "','" + transactions.get(transactions.size() - 1).getTransactionName() + "','" + transactions.get(transactions.size() - 1).getCategoryOfTransaction().toString() + "','"+transactions.get(transactions.size()-1).getTransactionDate().toString()+"');";
         System.out.println(sql);
@@ -191,10 +179,6 @@ private SQLiteConnection db;
     }
 
 
-    /**
-     *
-     * @param budget
-     */
     public void deleteBudget(Budget budget) {
         String sql="DELETE FROM Budgets WHERE ID='"+budget.getBudgetID()+"';";
         try{

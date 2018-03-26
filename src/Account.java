@@ -12,12 +12,6 @@ public class Account {
     private Date date;
 
 
-    /**
-     *
-     * @param ID
-     * @param amount
-     * @param income
-     */
     public Account(int ID,String fname, String sname, String uname, String pword,double amount, double income, Date date) {
         accountID=ID;
         accountAmount=amount;
@@ -45,10 +39,10 @@ public class Account {
         return this.accountAmount;
     }
     public void setAmount(double transaction){
-        this.accountAmount=this.accountAmount - (int) transaction;
+        this.accountAmount=this.accountAmount -  transaction;
     }
     public void increaseAmount(double transaction){
-        this.accountAmount=this.accountAmount+ (int) transaction;
+        this.accountAmount=this.accountAmount+  transaction;
     }
     public void setIncome(double income){
         this.income=income;

@@ -7,12 +7,12 @@ public class Budget {
     private TransactionType categoryForBudget;
 
 
-    public Budget(int ID,int accountID, double currentSpent, double limit,TransactionType category) {
-        budgetID=ID;
-        this.accountID=accountID;
-        this.currentSpent=currentSpent;
-        spendingLimit=limit;
-        categoryForBudget=category;
+    public Budget(int ID, int accountID, double currentSpent, double limit, TransactionType category) {
+        budgetID = ID;
+        this.accountID = accountID;
+        this.currentSpent = currentSpent;
+        spendingLimit = limit;
+        categoryForBudget = category;
     }
 
     public int getBudgetID() {
@@ -23,10 +23,12 @@ public class Budget {
         return this.spendingLimit;
     }
 
-    public double getCurrentSpent(){return this.currentSpent;}
+    public double getCurrentSpent() {
+        return this.currentSpent;
+    }
 
-    public void setCurrentSpend(double transactionAmount){
-        this.currentSpent=this.currentSpent+transactionAmount;
+    public void setCurrentSpend(double transactionAmount) {
+        this.currentSpent = this.currentSpent + transactionAmount;
     }
 
     public TransactionType getCategoryForBudget() {

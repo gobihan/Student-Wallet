@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Date;
 
 public class Transaction {
 
@@ -9,13 +9,13 @@ public class Transaction {
     private TransactionType categoryOfTransaction;
     private int accountID;
 
-    public Transaction(int ID, int accountID, String name,double amount, Date date, TransactionType category) {
-        transactionID=ID;
-        this.accountID=accountID;
-        transactionName=name;
+    public Transaction(int ID, int accountID, String name, double amount, Date date, TransactionType category) {
+        transactionID = ID;
+        this.accountID = accountID;
+        transactionName = name;
         transactionDate = date;
-        transactionAmount=amount;
-        categoryOfTransaction=category;
+        transactionAmount = amount;
+        categoryOfTransaction = category;
     }
 
     public int getTransactionID() {
@@ -34,6 +34,8 @@ public class Transaction {
         return this.categoryOfTransaction;
     }
 
-    public String getTransactionName(){return this.transactionName;}
+    public String getTransactionName() {
+        return this.transactionName;
+    }
 
 }

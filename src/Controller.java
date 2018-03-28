@@ -225,7 +225,7 @@ public class Controller {
             else
                 controller.moneyinfo.setText("You have £" + account.getAccountAmount() + " in your account\nYour income is £" + account.getIncome() + " per month.\nYou have gone over " + counter + " budgets.");
             controller.refresh();
-            primaryStage.setTitle("Stock GUI");
+            primaryStage.setTitle("Account Information");
             primaryStage.setScene(new Scene(root));
             primaryStage.initModality(Modality.NONE);
             primaryStage.initOwner(login.getScene().getWindow());
@@ -240,7 +240,7 @@ public class Controller {
     public void opendeleteAccount() throws IOException {
         Stage primaryStage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("confirmDeleteAccount.fxml"));
-        primaryStage.setTitle("Register");
+        primaryStage.setTitle("Delete Account");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.initOwner(deleteAccount.getScene().getWindow());
@@ -262,7 +262,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("addTransaction.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Add Transaction");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(addTrans.getScene().getWindow());
@@ -313,7 +313,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("confirm.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Confirm Transaction");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(confirmTrans.getScene().getWindow());
@@ -344,7 +344,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("deleteTransaction.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Delete Transaction");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(delete.getScene().getWindow());
@@ -372,7 +372,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmDelete.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Confirm deletion");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(deleter.getScene().getWindow());
@@ -396,7 +396,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("addBudget.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Add Budget");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(budgetAdd.getScene().getWindow());
@@ -453,7 +453,7 @@ public class Controller {
             Stage primaryStage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmBudget.fxml"));
             Parent root = loader.load();
-            primaryStage.setTitle("Stock GUI");
+            primaryStage.setTitle("Confirm budget");
             primaryStage.setScene(new Scene(root));
             primaryStage.initModality(Modality.NONE);
             primaryStage.initOwner(addBudget.getScene().getWindow());
@@ -496,7 +496,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("deleteBudget.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Delete Budget");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(delete.getScene().getWindow());
@@ -524,7 +524,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("confirmBudgetDelete.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Confirm delete budget");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(deleter2.getScene().getWindow());
@@ -557,7 +557,7 @@ public class Controller {
         Stage primaryStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("changeInfo.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Stock GUI");
+        primaryStage.setTitle("Change personal information");
         primaryStage.setScene(new Scene(root));
         primaryStage.initModality(Modality.NONE);
         primaryStage.initOwner(cpi.getScene().getWindow());
